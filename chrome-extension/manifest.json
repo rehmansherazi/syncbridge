@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Syncbridge",
+  "version": "0.1.0",
+  "description": "AI chat to CLI sync bridge — works on any AI site",
+  "permissions": ["clipboardRead", "clipboardWrite", "storage"],
+  "host_permissions": ["https://claude.ai/*", "https://chatgpt.com/*", "https://gemini.google.com/*", "https://www.perplexity.ai/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://claude.ai/*", "https://chatgpt.com/*", "https://gemini.google.com/*", "https://www.perplexity.ai/*"],
+      "js": ["src/universal.js", "src/adapter.js", "src/bot.js"],
+      "css": ["src/bot.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_title": "Syncbridge"
+  }
+}

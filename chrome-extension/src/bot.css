@@ -1,0 +1,83 @@
+#syncbridge-bot {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999999;
+  font-family: monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  user-select: none;
+}
+
+#syncbridge-tab {
+  width: 24px;
+  background: #2d2d2d;
+  color: #d4d4d4;
+  border: 1px solid #3e3e3e;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  writing-mode: horizontal-tb;
+  padding: 16px 4px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#syncbridge-tab:hover {
+  background: #3e3e3e;
+}
+
+#syncbridge-panel {
+  width: 220px;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border: 1px solid #3e3e3e;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+
+#syncbridge-bot:hover #syncbridge-panel,
+#syncbridge-panel.pinned {
+  max-height: 300px;
+  opacity: 1;
+}
+
+#syncbridge-panel-inner {
+  padding: 10px;
+}
+
+#syncbridge-panel-inner button {
+  display: block;
+  width: 100%;
+  margin: 3px 0;
+  padding: 5px 8px;
+  background: #2d2d2d;
+  color: #d4d4d4;
+  border: 1px solid #3e3e3e;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 11px;
+  font-family: monospace;
+}
+
+#syncbridge-panel-inner button:hover {
+  background: #3e3e3e;
+}
+
+#syncbridge-status {
+  font-size: 10px;
+  color: #858585;
+  margin-top: 6px;
+  min-height: 14px;
+  word-break: break-word;
+}

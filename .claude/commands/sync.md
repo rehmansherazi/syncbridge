@@ -1,0 +1,2 @@
+# Sync
+Read the file claude-ai.md in the project root and execute the instructions inside it. After completing, update claude-state.md with a brief summary of what was done, one line per action, prefixed with ✓.
