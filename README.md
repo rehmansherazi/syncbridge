@@ -76,7 +76,23 @@ Supported sites:
 - www.perplexity.ai
 
 ## Keyboard Shortcuts
-No default keybindings are registered. Commands can be bound manually via **Preferences → Keyboard Shortcuts** (`syncbridge.openPanel`, `syncbridge.sendToCLI`).
+
+### VS Code
+| Shortcut | Action |
+|---|---|
+| Ctrl+Shift+S | Open Syncbridge panel |
+| Ctrl+Shift+X | Send clipboard to claude-ai.md |
+
+To change: edit `contributes.keybindings` in `package.json`, recompile and reinstall.
+Users can also remap without touching code via VS Code's built-in Keyboard Shortcuts editor: `Ctrl+K Ctrl+S`.
+
+### Chrome Extension
+| Shortcut | Action |
+|---|---|
+| Alt+C | Copy AI response to clipboard |
+| Alt+V | Inject clipboard into AI input |
+
+To change: edit the `keydown` listener in `chrome-extension/src/bot.js`, then reload the extension in chrome://extensions.
 
 ## Development
 Built using VS Code Extension API + Claude Code CLI with deterministic SEP-based workflow.
