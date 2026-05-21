@@ -3,7 +3,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { SyncBridgePanel } from './panel';
 
-function getWorkspaceRoot(): string | null {
+function getWorkspaceRoot(context: vscode.ExtensionContext): string | null {
+    const pinned = context.globalState.get<string>('syncbridge.root');
+    if (pinned) return pinned;
+
     const folders = vscode.workspace.workspaceFolders;
     if (!folders) return null;
 
@@ -11,17 +14,6 @@ function getWorkspaceRoot(): string | null {
     if (activeEditor) {
         const activeFolder = vscode.workspace.getWorkspaceFolder(activeEditor.document.uri);
         if (activeFolder) return activeFolder.uri.fsPath;
-    }
-
-    const activeTerminal = vscode.window.activeTerminal;
-    if (activeTerminal) {
-        for (const folder of folders) {
-            if (activeTerminal.name.toLowerCase().includes(
-                path.basename(folder.uri.fsPath).toLowerCase()
-            )) {
-                return folder.uri.fsPath;
-            }
-        }
     }
 
     return folders[0].uri.fsPath;
@@ -45,7 +37,7 @@ function initControlFiles(root: string): void {
 export function activate(context: vscode.ExtensionContext) {
     console.log('activate() called');
 
-    const root = getWorkspaceRoot();
+    const root = getWorkspaceRoot(context);
 
     if (!root) {
         vscode.window.showWarningMessage('Syncbridge: no workspace folder open.');
@@ -87,7 +79,27 @@ export function activate(context: vscode.ExtensionContext) {
         SyncBridgePanel.currentPanel?.refresh();
     });
 
-    context.subscriptions.push(statusBar, watcher, openPanel, sendToCLI);
+    const setRoot = vscode.commands.registerCommand('syncbridge.setRoot', async () => {
+        const folders = vscode.workspace.workspaceFolders;
+        if (!folders) {
+            vscode.window.showWarningMessage('Syncbridge: no workspace folders open.');
+            return;
+        }
+        const items = folders.map(f => ({
+            label: path.basename(f.uri.fsPath),
+            description: f.uri.fsPath,
+            folder: f
+        }));
+        const picked = await vscode.window.showQuickPick(items, {
+            placeHolder: 'Select active project for Syncbridge'
+        });
+        if (!picked) return;
+        context.globalState.update('syncbridge.root', picked.folder.uri.fsPath);
+        vscode.window.showInformationMessage(`Syncbridge: active project set to ${picked.label}`);
+        SyncBridgePanel.currentPanel?.refresh();
+    });
+
+    context.subscriptions.push(statusBar, watcher, openPanel, sendToCLI, setRoot);
 }
 
 export function deactivate() {}

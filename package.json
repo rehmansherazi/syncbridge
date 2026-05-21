@@ -2,7 +2,13 @@
   "name": "syncbridge",
   "displayName": "syncbridge",
   "description": "AI chat to CLI sync bridge",
+  "publisher": "rehman",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rehman/syncbridge"
+  },
+  "license": "MIT",
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -24,6 +30,10 @@
       {
         "command": "syncbridge.sendToCLI",
         "title": "Syncbridge: Send Clipboard to CLI"
+      },
+      {
+        "command": "syncbridge.setRoot",
+        "title": "Syncbridge: Set Active Project"
       }
     ],
     "keybindings": [
@@ -36,6 +46,11 @@
         "command": "syncbridge.sendToCLI",
         "key": "ctrl+shift+x",
         "mac": "cmd+shift+x"
+      },
+      {
+        "command": "syncbridge.setRoot",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
       }
     ]
   },
