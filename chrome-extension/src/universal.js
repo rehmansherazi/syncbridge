@@ -61,6 +61,25 @@ function watchForResponseComplete() {
   window._syncbridgeWatcher = interval;
 }
 
+function watchStateAndInject() {
+  let lastClip = '';
+  setInterval(async () => {
+    try {
+      const text = await Syncbridge.readClipboard();
+      if (!text || text === lastClip || text.length < 10) return;
+      if (!text.includes('claude-state') && !text.includes('✓')) return;
+      lastClip = text;
+      const ok = await Syncbridge.injectToInput(text);
+      const status = document.getElementById('syncbridge-status');
+      if (status) {
+        status.textContent = ok ? '✓ Auto-injected state' : '✗ Input not found';
+        setTimeout(() => { if (status) status.textContent = 'Ready'; }, 3000);
+      }
+    } catch(e) {}
+  }, 2000);
+}
+
 window.addEventListener('load', () => {
   setTimeout(watchForResponseComplete, 2000);
+  setTimeout(watchStateAndInject, 3000);
 });

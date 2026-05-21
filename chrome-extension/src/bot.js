@@ -69,6 +69,15 @@ function createBot() {
     const ok = await Syncbridge.injectToInput(text);
     status.textContent = ok ? '✓ Injected to input' : '✗ Input not found';
   });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.key === 'c') {
+      document.getElementById('sb-copy-response').click();
+    }
+    if (e.altKey && e.key === 'v') {
+      document.getElementById('sb-inject-clipboard').click();
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

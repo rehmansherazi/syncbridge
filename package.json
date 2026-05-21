@@ -25,6 +25,18 @@
         "command": "syncbridge.sendToCLI",
         "title": "Syncbridge: Send Clipboard to CLI"
       }
+    ],
+    "keybindings": [
+      {
+        "command": "syncbridge.openPanel",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      },
+      {
+        "command": "syncbridge.sendToCLI",
+        "key": "ctrl+shift+x",
+        "mac": "cmd+shift+x"
+      }
     ]
   },
   "scripts": {
