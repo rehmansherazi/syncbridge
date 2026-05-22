@@ -68,6 +68,11 @@ export function activate(context: vscode.ExtensionContext) {
     watcher.onDidChange(() => SyncBridgePanel.currentPanel?.refresh());
 
     const sendToCLI = vscode.commands.registerCommand('syncbridge.sendToCLI', async () => {
+        const root = getWorkspaceRoot(context);
+        if (!root) {
+            vscode.window.showWarningMessage('Syncbridge: no active project set.');
+            return;
+        }
         const content = await vscode.env.clipboard.readText();
         if (!content.trim()) {
             vscode.window.showWarningMessage('Syncbridge: clipboard is empty.');
@@ -75,7 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
         const filepath = path.join(root, 'claude-ai.md');
         fs.writeFileSync(filepath, content, 'utf8');
-        vscode.window.showInformationMessage('Syncbridge: claude-ai.md updated from clipboard.');
+        vscode.window.showInformationMessage(`Syncbridge: claude-ai.md updated in ${path.basename(root)}`);
         SyncBridgePanel.currentPanel?.refresh();
     });
 
