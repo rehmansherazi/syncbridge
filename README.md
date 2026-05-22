@@ -30,13 +30,18 @@ The extension watches `claude-state.md` in the active workspace root. Any write 
 - `/sync` — read `claude-ai.md` and execute the instructions inside it, then update `claude-state.md` with a `✓`-prefixed summary of every action taken
 
 ## Claude Code Hook
-A `PostToolUse` hook fires after every `Write` tool call in Claude Code. It appends a timestamped line to `claude-state.md`:
+The hook is configured in `.claude/settings.json` and fires automatically after every file write by Claude Code CLI. No manual step needed. It appends a timestamped line to `claude-state.md`:
 
 ```
 ✓ HH:MM:SS wrote <file_path>
 ```
 
-Hook lives in `.claude/settings.json` at the project root. It runs automatically — no manual setup needed beyond opening the project in Claude Code.
+To copy the hook to a new project:
+```bash
+mkdir -p <project>/.claude/commands
+cp .claude/settings.json <project>/.claude/
+cp .claude/commands/sync.md <project>/.claude/commands/
+```
 
 ## Control Files
 All three files are created automatically in the workspace root on first activation if they don't exist.
@@ -46,6 +51,20 @@ All three files are created automatically in the workspace root on first activat
 | `claude-ai.md` | AI → CLI | Paste instructions from chat here; `/sync` reads and executes them |
 | `claude-state.md` | CLI → AI | Auto-updated by the hook after every file write; copy into chat to resume |
 | `claude-context.md` | Shared | Migration prompt for fresh chat sessions; use "Regenerate" button to rebuild |
+
+## Context Migration (claude-context.md)
+Use this when your chat gets too long or context drifts.
+
+**How it works:**
+1. Click **⟳ Regenerate context.md** in the Syncbridge panel
+2. It merges your last instructions (`claude-ai.md`) + last 10 CLI actions (`claude-state.md`) into a structured migration prompt
+3. Copy `claude-context.md` contents
+4. Paste into a new chat — the AI picks up exactly where you left off
+
+**When to use it:**
+- Chat is getting long and responses are drifting
+- Starting a new day on the same project
+- Switching between projects
 
 ## Multi-Folder Workspace Behavior
 When the workspace has multiple root folders, the extension resolves the active root in priority order:
@@ -77,22 +96,29 @@ Supported sites:
 
 ## Keyboard Shortcuts
 
-### VS Code
-| Shortcut | Action |
-|---|---|
-| Ctrl+Shift+S | Open Syncbridge panel |
-| Ctrl+Shift+X | Send clipboard to claude-ai.md |
+### Keyboard Shortcuts — Complete Reference
+| Shortcut | Where | Action |
+|---|---|---|
+| Ctrl+Shift+S | VS Code | Open Syncbridge panel |
+| Ctrl+Shift+X | VS Code | Send clipboard to claude-ai.md |
+| Ctrl+Shift+A | VS Code | Set active project |
+| Alt+C | Chrome | Copy AI response to clipboard |
+| Alt+V | Chrome | Inject clipboard into AI input |
 
-To change: edit `contributes.keybindings` in `package.json`, recompile and reinstall.
+To change VS Code shortcuts: edit `contributes.keybindings` in `package.json`, recompile and reinstall.
 Users can also remap without touching code via VS Code's built-in Keyboard Shortcuts editor: `Ctrl+K Ctrl+S`.
 
-### Chrome Extension
-| Shortcut | Action |
-|---|---|
-| Alt+C | Copy AI response to clipboard |
-| Alt+V | Inject clipboard into AI input |
+To change Chrome shortcuts: edit the `keydown` listener in `chrome-extension/src/bot.js`, then reload the extension in chrome://extensions.
 
-To change: edit the `keydown` listener in `chrome-extension/src/bot.js`, then reload the extension in chrome://extensions.
+## Extension Test Runner
+Tests live in `src/test/extension.test.ts` — 7 deterministic tests covering control file creation, write stability, append ordering, context regeneration, and extension activation.
+
+To run: click the beaker icon (Testing) in the VS Code sidebar → press ▷ Run All Tests.
+
+All tests must pass before packaging.
+
+## Keeping README Updated
+README is updated with every commit as a project principle.
 
 ## Development
 Built using VS Code Extension API + Claude Code CLI with deterministic SEP-based workflow.

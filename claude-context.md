@@ -1,29 +1,39 @@
 # claude-context.md
 
-## Project
-Syncbridge — VS Code extension + Chrome extension that bridges AI chat and coding CLI.
+## Last instructions sent to CLI
 
-## VS Code Extension status
-Complete. Packaged as syncbridge-0.0.1.vsix. All 9 SEPs done.
+ DONE 
 
-## Phase 2 starting
-Building Chrome extension with universal layer first, then per-site adapters.
-Universal layer: floating bot UI injected into any page, clipboard bridge, WebSocket to VS Code.
-Site adapters: one per AI site (claude.ai, ChatGPT, Gemini, Perplexity).
+## Last CLI state
 
-## Chrome extension status
-SEP-10 and SEP-11 complete. Floating bot UI working on all four sites.
+# claude-state.md
+<!-- CLI → AI: Claude Code writes status here -->
+✓ auth module complete
+✓ auth module complete
+✓ auth module complete
+✓ auth module complete
+✓ Verified hello-from-ai.txt exists with content "sync bridge works"
+✓ 17:35:04 wrote 
+✓ 17:37:11 wrote unknown
+✓ 18:20:06 wrote unknown
+✓ 18:59:04 wrote unknown
+✓ 19:10:36 wrote unknown
+✓ 19:10:38 wrote unknown
+✓ 19:12:00 wrote unknown
+✓ 19:12:00 wrote unknown
+✓ 19:12:02 wrote unknown
+✓ 19:12:06 wrote unknown
+✓ 19:12:12 wrote unknown
+✓ 19:12:13 wrote unknown
+✓ 22:34:29 wrote unknown
+✓ 22:34:29 wrote unknown
+✓ 23:04:28 wrote unknown
+✓ 16:40:06 wrote unknown
+✓ 23:23:02 wrote unknown
 
-Verified selectors:
-- claude.ai response: div[data-is-streaming="false"], input: div[contenteditable="true"]
-- chatgpt.com response: .markdown, input: #prompt-textarea
-- gemini.google.com response: .response-content, input: rich-textarea
-- www.perplexity.ai response: .prose, input: #ask-input
-
-Both directions working on all sites:
-- ↑ Copy AI response → clipboard
-- ↓ Inject clipboard → input
 
 ## Resume prompt
-We are building syncbridge. VS Code extension is complete. Now starting Phase 2: Chrome extension.
-Read above sections and continue from where we left off.
+
+We are building a VS Code extension called syncbridge.
+
+Read the above sections and continue from where we left off.

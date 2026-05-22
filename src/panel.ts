@@ -16,16 +16,24 @@ export class SyncBridgePanel {
             if (msg.command === 'regen') {
                 const ai    = this._read('claude-ai.md');
                 const state = this._read('claude-state.md');
+
+                const stateLines = state
+                    .split('\n')
+                    .filter(l => l.startsWith('✓'))
+                    .slice(-10)
+                    .join('\n');
+
                 const context = [
                     '# claude-context.md',
                     '## Last instructions sent to CLI',
-                    ai,
-                    '## Last CLI state',
-                    state,
+                    ai.trim() || '(none)',
+                    '## Last 10 CLI actions',
+                    stateLines || '(none)',
                     '## Resume prompt',
-                    'We are building a VS Code extension called syncbridge.',
-                    'Read the above sections and continue from where we left off.',
+                    'Read the above sections. Continue from where we left off.',
+                    'Do not re-do completed work. Ask for next task if unclear.',
                 ].join('\n\n');
+
                 const fp = path.join(this._root, 'claude-context.md');
                 fs.writeFileSync(fp, context, 'utf8');
                 vscode.window.showInformationMessage('Syncbridge: claude-context.md regenerated.');
