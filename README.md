@@ -9,6 +9,12 @@ Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity) and codi
 - VS Code extension (this) — sidebar panel, file watcher, status bar, clipboard bridge
 - Chrome extension — floating bot UI, site adapters for each AI
 
+## Flow diagram
+
+![Syncbridge 13-step flow](docs/syncbridge-flow.svg)
+
+See the diagram above for the complete 13-step flow from opening VS Code to AI resuming with full context.
+
 ## VS Code Extension Commands
 - `Syncbridge: Open Panel` — open the sync panel in column two
 - `Syncbridge: Send Clipboard to CLI` — overwrite `claude-ai.md` with current clipboard content
