@@ -2,38 +2,14 @@
 
 ## Last instructions sent to CLI
 
- DONE 
+(none)
 
-## Last CLI state
+## Last 10 CLI actions
 
-# claude-state.md
-<!-- CLI → AI: Claude Code writes status here -->
-✓ auth module complete
-✓ auth module complete
-✓ auth module complete
-✓ auth module complete
-✓ Verified hello-from-ai.txt exists with content "sync bridge works"
-✓ 17:35:04 wrote 
-✓ 17:37:11 wrote unknown
-✓ 18:20:06 wrote unknown
-✓ 18:59:04 wrote unknown
-✓ 19:10:36 wrote unknown
-✓ 19:10:38 wrote unknown
-✓ 19:12:00 wrote unknown
-✓ 19:12:00 wrote unknown
-✓ 19:12:02 wrote unknown
-✓ 19:12:06 wrote unknown
-✓ 19:12:12 wrote unknown
-✓ 19:12:13 wrote unknown
-✓ 22:34:29 wrote unknown
-✓ 22:34:29 wrote unknown
-✓ 23:04:28 wrote unknown
-✓ 16:40:06 wrote unknown
-✓ 23:23:02 wrote unknown
-
+(none)
 
 ## Resume prompt
 
-We are building a VS Code extension called syncbridge.
+Read the above sections. Continue from where we left off.
 
-Read the above sections and continue from where we left off.
+Do not re-do completed work. Ask for next task if unclear.

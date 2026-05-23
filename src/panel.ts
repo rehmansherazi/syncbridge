@@ -26,7 +26,7 @@ export class SyncBridgePanel {
                 const context = [
                     '# claude-context.md',
                     '## Last instructions sent to CLI',
-                    ai.trim() || '(none)',
+                    ai.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.startsWith('<!--')).join('\n').trim() || '(none)',
                     '## Last 10 CLI actions',
                     stateLines || '(none)',
                     '## Resume prompt',
