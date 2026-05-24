@@ -39,6 +39,15 @@ export class SyncBridgePanel {
                 vscode.window.showInformationMessage('Syncbridge: claude-context.md regenerated.');
                 this._update();
             }
+            if (msg.command === 'clear') {
+                const files = ['claude-ai.md', 'claude-state.md'];
+                for (const f of files) {
+                    const fp = path.join(this._root, f);
+                    fs.writeFileSync(fp, `# ${f}\n<!-- reset -->\n`, 'utf8');
+                }
+                vscode.window.showInformationMessage('Syncbridge: control files cleared.');
+                this._update();
+            }
             if (msg.command === 'copy') {
                 const fileMap: Record<string, string> = {
                     'ai':    'claude-ai.md',
@@ -130,6 +139,9 @@ export class SyncBridgePanel {
   <h3>Actions</h3>
   <button onclick="regen()">⟳ Regenerate context.md</button>
 
+  <h3>Danger Zone</h3>
+  <button onclick="clearFiles()" id="sb-clear" style="background: var(--vscode-inputValidation-errorBackground); border-color: var(--vscode-inputValidation-errorBorder);">⚠ Clear all control files</button>
+
   <script>
     const vscode = acquireVsCodeApi();
     function copy(file) {
@@ -137,6 +149,11 @@ export class SyncBridgePanel {
     }
     function regen() {
       vscode.postMessage({ command: 'regen' });
+    }
+    function clearFiles() {
+      if (confirm('Reset claude-ai.md and claude-state.md to empty? This cannot be undone.')) {
+        vscode.postMessage({ command: 'clear' });
+      }
     }
   </script>
 </body>
