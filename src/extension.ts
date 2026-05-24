@@ -46,6 +46,25 @@ export function activate(context: vscode.ExtensionContext) {
 
     initControlFiles(root);
 
+    const isFirstRun = !context.globalState.get('syncbridge.welcomed');
+    if (isFirstRun) {
+        context.globalState.update('syncbridge.welcomed', true);
+        vscode.window.showInformationMessage(
+            'Welcome to Syncbridge! Bridge your AI chat and Claude Code CLI.',
+            'Open Panel',
+            'Setup This Project',
+            'View Docs'
+        ).then(choice => {
+            if (choice === 'Open Panel') {
+                vscode.commands.executeCommand('syncbridge.openPanel');
+            } else if (choice === 'Setup This Project') {
+                vscode.commands.executeCommand('syncbridge.setupProject');
+            } else if (choice === 'View Docs') {
+                vscode.env.openExternal(vscode.Uri.parse('https://github.com/rehman/syncbridge#readme'));
+            }
+        });
+    }
+
     const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     statusBar.text = '$(sync) Syncbridge';
     statusBar.tooltip = 'AI ↔ CLI sync bridge is active';
