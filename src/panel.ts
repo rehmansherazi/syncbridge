@@ -100,9 +100,21 @@ export class SyncBridgePanel {
   pre { background: var(--vscode-textBlockQuote-background); padding: 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-word; font-size: 12px; }
   button { background: var(--vscode-button-background); color: var(--vscode-button-foreground); border: none; padding: 6px 12px; border-radius: 3px; cursor: pointer; margin: 4px 4px 0 0; font-size: 12px; }
   button:hover { background: var(--vscode-button-hoverBackground); }
+  #sb-project {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--vscode-foreground);
+    background: var(--vscode-textBlockQuote-background);
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
 </style>
 </head>
 <body>
+  <div id="sb-project">
+    <span>📁 ${path.basename(this._root)}</span>
+  </div>
   <h3>claude-ai.md → CLI</h3>
   <pre>${ai}</pre>
   <button onclick="copy('ai')">Copy</button>

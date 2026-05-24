@@ -11,7 +11,7 @@ Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity) and codi
 
 ## Flow diagram
 
-![Syncbridge 13-step flow](docs/syncbridge-flow.svg)
+![Syncbridge 13-step flow](docs/syncbridge-flow.png)
 
 See the diagram above for the complete 13-step flow from opening VS Code to AI resuming with full context.
 
