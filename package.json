@@ -34,6 +34,10 @@
       {
         "command": "syncbridge.setRoot",
         "title": "Syncbridge: Set Active Project"
+      },
+      {
+        "command": "syncbridge.setupProject",
+        "title": "Syncbridge: Setup Project"
       }
     ],
     "keybindings": [
@@ -51,6 +55,11 @@
         "command": "syncbridge.setRoot",
         "key": "ctrl+shift+a",
         "mac": "cmd+shift+a"
+      },
+      {
+        "command": "syncbridge.setupProject",
+        "key": "ctrl+shift+e",
+        "mac": "cmd+shift+e"
       }
     ]
   },

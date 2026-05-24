@@ -104,7 +104,45 @@ export function activate(context: vscode.ExtensionContext) {
         SyncBridgePanel.currentPanel?.refresh();
     });
 
-    context.subscriptions.push(statusBar, watcher, openPanel, sendToCLI, setRoot);
+    const setupProject = vscode.commands.registerCommand('syncbridge.setupProject', async () => {
+        const root = getWorkspaceRoot(context);
+        if (!root) {
+            vscode.window.showWarningMessage('Syncbridge: no active project set.');
+            return;
+        }
+
+        const claudeDir = path.join(root, '.claude');
+        const commandsDir = path.join(claudeDir, 'commands');
+
+        if (!fs.existsSync(claudeDir)) fs.mkdirSync(claudeDir, { recursive: true });
+        if (!fs.existsSync(commandsDir)) fs.mkdirSync(commandsDir, { recursive: true });
+
+        const settingsPath = path.join(claudeDir, 'settings.json');
+        if (!fs.existsSync(settingsPath)) {
+            const settings = {
+                hooks: {
+                    PostToolUse: [{
+                        matcher: "Write",
+                        hooks: [{
+                            type: "command",
+                            command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); fp=ti.get('file_path','unknown'); rel=os.path.relpath(fp,os.getcwd()) if fp!='unknown' else 'unknown'; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' wrote '+rel+'\\n'; open('claude-state.md','a').write(line)\""
+                        }]
+                    }]
+                }
+            };
+            fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), 'utf8');
+        }
+
+        const syncPath = path.join(commandsDir, 'sync.md');
+        if (!fs.existsSync(syncPath)) {
+            const syncContent = `# Sync\nRead the file claude-ai.md in the project root and execute the instructions inside it. After completing, update claude-state.md with a brief summary of what was done, one line per action, prefixed with ✓.`;
+            fs.writeFileSync(syncPath, syncContent, 'utf8');
+        }
+
+        vscode.window.showInformationMessage(`Syncbridge: project setup complete in ${path.basename(root)}`);
+    });
+
+    context.subscriptions.push(statusBar, watcher, openPanel, sendToCLI, setRoot, setupProject);
 }
 
 export function deactivate() {}
