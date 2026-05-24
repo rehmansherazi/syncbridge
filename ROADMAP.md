@@ -15,16 +15,14 @@ Core sync bridge between AI chat and Claude Code CLI.
 - 7 deterministic tests passing
 - Full documentation + flow diagram
 
-## Phase 2 — Now (Polish + Open Source)
-Fix remaining gaps and publish publicly.
-
-- Fix hook path variable (writes "unknown" instead of filename)
-- Show active project name in panel header
-- Add clear/reset button for control files in panel
-- Auto-deploy hook to new projects via setup command
-- Onboarding flow for first-time users
-- Public GitHub repo with README + flow diagram
-- Launch post on dev.to / Reddit r/ClaudeAI
+## Phase 2 — Complete ✓ (Polish + Open Source)
+- ✓ Fix hook path variable (now shows relative filename)
+- ✓ Show active project name in panel header
+- ✓ Add clear/reset button for control files in panel
+- ✓ Auto-deploy hook to new projects via Ctrl+Shift+E (Syncbridge: Setup Project)
+- ✓ First-run onboarding message with action buttons
+- ✗ Public GitHub repo — next
+- ✗ Launch post on dev.to / Reddit r/ClaudeAI — next
 
 ## Phase 3 — Publication
 - Publish VS Code extension to Marketplace

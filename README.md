@@ -108,6 +108,7 @@ Supported sites:
 | Ctrl+Shift+S | VS Code | Open Syncbridge panel |
 | Ctrl+Shift+X | VS Code | Send clipboard to claude-ai.md |
 | Ctrl+Shift+A | VS Code | Set active project |
+| Ctrl+Shift+E | VS Code | Setup current project (deploys hook + /sync command) |
 | Alt+C | Chrome | Copy AI response to clipboard |
 | Alt+V | Chrome | Inject clipboard into AI input |
 
