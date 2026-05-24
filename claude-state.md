@@ -5,3 +5,5 @@
 ✓ 18:22:21 wrote unknown
 ✓ 18:43:25 wrote unknown
 ✓ 20:46:26 wrote unknown
+✓ 21:36:19 wrote /home/rehman/repos/syncbridge/hook-path-test.txt
+✓ 21:38:20 wrote hook-path-test2.txt

@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo \"✓ $(date '+%H:%M:%S') wrote $(echo $CLAUDE_TOOL_INPUT | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get(\\\"path\\\",d.get(\\\"file_path\\\",\\\"unknown\\\")))' 2>/dev/null || echo unknown)\" >> claude-state.md"
+            "command": "python3 -c \"import sys,json,datetime,os; d=json.load(sys.stdin); ti=d.get('tool_input',{}); fp=ti.get('file_path',ti.get('path','unknown')); cwd=os.getcwd(); rel=os.path.relpath(fp,cwd) if fp!='unknown' else fp; print('\\u2713 ' + datetime.datetime.now().strftime('%H:%M:%S') + ' wrote ' + rel)\" >> claude-state.md"
           }
         ]
       }
