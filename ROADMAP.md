@@ -24,20 +24,37 @@ Core sync bridge between AI chat and Claude Code CLI.
 - ✗ Public GitHub repo — next
 - ✗ Launch post on dev.to / Reddit r/ClaudeAI — next
 
-## Phase 3 — Publication
-- Publish VS Code extension to Marketplace
-- Package and publish Chrome extension to Chrome Web Store
-- Site adapter auto-update mechanism (when AI sites change DOM)
-- Support additional AI sites (Mistral, Grok, Copilot)
+## Phase 3 — In Progress (Publication)
+- SEP-12: Public GitHub repo — description, topics, clean history review
+- SEP-13: Publish VS Code extension to Marketplace (vsce publish)
+- SEP-14: Package and submit Chrome extension to Chrome Web Store
+- SEP-15: Site adapter resilience — fallback selectors when AI sites change DOM
+- SEP-16: Additional AI sites — Mistral, Grok, Microsoft Copilot
 
 ## Phase 4 — MCP Server (Open Source)
 Convert syncbridge into a first-class Claude Code MCP integration.
 
-- Expose MCP tools: update_state, read_instructions, get_context, clear_state
+- SEP-17: MCP server — expose update_state, read_instructions, get_context, clear_state as MCP tools
+- SEP-18: Register with Anthropic community MCP registry
 - Claude Code connects via: claude mcp add syncbridge
 - Eliminates file polling — pure event-driven tool calls
-- List in Anthropic community MCP registry
-- Positions project as a native Claude ecosystem tool
+
+## Completed SEPs
+| SEP | Phase | What was built |
+|---|---|---|
+| SEP-00 | 1 | Environment setup |
+| SEP-01 | 1 | Control files + status bar |
+| SEP-02 | 1 | File watcher → status bar updates |
+| SEP-03 | 1 | Sidebar panel UI |
+| SEP-04 | 1 | Copy buttons → clipboard |
+| SEP-05 | 1 | Clipboard → claude-ai.md |
+| SEP-06 | 1 | /sync slash command |
+| SEP-07 | 1 | Regenerate context.md button |
+| SEP-08 | 1 | Claude Code PostToolUse hook |
+| SEP-09 | 1 | Package as .vsix |
+| SEP-10 | 1 | Chrome extension — universal layer + 4 site adapters |
+| SEP-11 | 1 | Chrome ext UX — draggable, hover panel, sync icon, auto-copy |
+| Phase 2 fixes | 2 | Hook relative path, panel header, clear button, setup command, onboarding |
 
 ## Phase 5 — Pro Tier (If Traction)
 Team collaboration features — only if community adoption justifies it.
