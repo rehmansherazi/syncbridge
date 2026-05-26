@@ -23,6 +23,7 @@ export class SyncBridgePanel {
                     .slice(-10)
                     .join('\n');
 
+                const conventions = this._read('SYNCBRIDGE_CONVENTIONS.md');
                 const context = [
                     '# claude-context.md',
                     '## Last instructions sent to CLI',
@@ -32,6 +33,8 @@ export class SyncBridgePanel {
                     '## Resume prompt',
                     'Read the above sections. Continue from where we left off.',
                     'Do not re-do completed work. Ask for next task if unclear.',
+                    '## Project conventions',
+                    conventions.trim() || '(none)',
                 ].join('\n\n');
 
                 const fp = path.join(this._root, 'claude-context.md');
