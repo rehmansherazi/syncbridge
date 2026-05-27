@@ -27,3 +27,23 @@ Execute instructions: /sync
 - Ctrl+Shift+E: setup project
 - Alt+C: copy AI response (Chrome)
 - Alt+V: inject to input (Chrome)
+
+## Environment
+- OS: Ubuntu 24 (T14)
+- Node: v22.22.1
+- npm: 9.2.0
+- VS Code: 1.118.1
+- Repo: ~/repos/syncbridge
+- Branch: master
+- Extension ID: rehman.syncbridge
+
+## Project operating principles
+- One SEP at a time — scoped, tested, committed
+- Deterministic logic only — no randomness, no implicit timestamps
+- Immutable transformations — no hidden side effects
+- Stable ordering — lexical, sorted, consistent
+- Test-first validation — all SEPs include deterministic tests
+- Additive evolution — extend, never rewrite completed work
+- Replay-safe execution — same input always produces same output
+- Minimal complexity — simple composable primitives over abstraction
+- README updated with every commit

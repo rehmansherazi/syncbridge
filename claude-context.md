@@ -2,38 +2,17 @@
 
 ## Last instructions sent to CLI
 
-Claude responded: You're right — this is empty because we just cleaned the files.
-You're right — this is empty because we just cleaned the files. The migration only works when there's real content in them from actual work.
-Here's the complete picture of how it works in practice on jobmatch:
-Step 1 — Normal work session:
-You ask claude.ai something about jobmatch
-Chrome bot auto-copies the response
-Ctrl+Shift+X writes it to claude-ai.md
-/sync in Claude Code executes it
-Hook auto-updates claude-state.md with every file write
-After some real work, your files will look like:
-claude-ai.md:
-  Implement the job matching algorithm with scoring...
-claude-state.md:
-  ✓ 10:23:01 wrote src/matcher.py
-  ✓ 10:23:04 wrote tests/test_matcher.py
-  ✓ 10:25:11 wrote src/scorer.py
-Step 2 — When chat gets long, regenerate:
-claude-context.md:
-  ## Last instructions sent to CLI
-  Implement the job matching algorithm...
-  ## Last 10 CLI actions
-  ✓ wrote src/matcher.py
-  ✓ wrote tests/test_matcher.py
-  ✓ wrote src/scorer.py
-  ## Resume prompt
-  Read the above sections. Continue from where we left off.
-Step 3 — Start fresh chat:
-Copy claude-context.md contents
-Paste into new claude.ai chat
-AI instantly knows what was done and what's next
-The files are empty right now because no real jobmatch work has flowed through syncbridge yet. Once you start using it on jobmatch, they'll fill up naturally.
-Go use it on jobmatch — come back if anything feels broken.
+SEP-00 through SEP-11 complete. Phase 2 fixes complete.
+Full details in ROADMAP.md.
+- SEP-12: Public GitHub repo
+- SEP-13: VS Code Marketplace publish  
+- SEP-14: Chrome Web Store submission
+- SEP-15: Site adapter resilience
+- SEP-16: Additional AI sites (Mistral, Grok, Copilot)
+- SEP-17: MCP server
+- SEP-18: MCP registry
+SEP-12: Create public GitHub repo with description, topics, and verify clean commit history.
+Claude Code CLI. Start: claude. Clear between SEPs: /clear
 
 ## Last 10 CLI actions
 
@@ -45,9 +24,43 @@ Go use it on jobmatch — come back if anything feels broken.
 ✓ 21:36:19 wrote /home/rehman/repos/syncbridge/hook-path-test.txt
 ✓ 21:38:20 wrote hook-path-test2.txt
 ✓ 18:57:01 wrote claude-context.md
+✓ 19:22:04 wrote SYNCBRIDGE_CONVENTIONS.md
+✓ 09:37:44 wrote claude-ai.md
 
 ## Resume prompt
 
 Read the above sections. Continue from where we left off.
 
 Do not re-do completed work. Ask for next task if unclear.
+
+## Project conventions
+
+# Syncbridge Project Conventions
+
+## Coding agent
+Claude Code CLI is our coding agent.
+Start: claude (in ~/repos/syncbridge terminal)
+Clear between SEPs: /clear
+Execute instructions: /sync
+
+## SEP workflow
+- One SEP at a time
+- All file edits via Claude Code CLI — not manual
+- Every SEP ends with: npm run compile → vsce package → git commit
+- Ask before making assumptions
+
+## Stack
+- VS Code Extension: TypeScript, src/extension.ts, src/panel.ts
+- Chrome Extension: vanilla JS, chrome-extension/src/
+- Build: npm run compile
+- Package: vsce package
+- Install: code --install-extension syncbridge-0.0.1.vsix
+- Reload: Developer: Reload Window
+
+## Key shortcuts
+- Ctrl+Shift+S: open panel
+- Ctrl+Shift+X: send clipboard to CLI
+- Ctrl+Shift+A: set active project
+- Ctrl+Shift+E: setup project
+- Alt+C: copy AI response (Chrome)
+- Alt+V: inject to input (Chrome)
