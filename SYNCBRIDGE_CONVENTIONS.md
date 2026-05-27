@@ -48,11 +48,19 @@ Execute instructions: /sync
 - Minimal complexity — simple composable primitives over abstraction
 - README updated with every commit
 
-## What already exists on disk
-- Local git repo: ~/repos/syncbridge — initialized, 20+ commits, master branch
-- No remote origin yet — SEP-12 will add GitHub remote and push
-- VS Code extension: compiled, packaged as syncbridge-0.0.1.vsix, installed
-- Chrome extension: loaded unpacked in Chrome from chrome-extension/
-- Three control files: claude-ai.md, claude-state.md, claude-context.md
-- Claude Code hook: .claude/settings.json — PostToolUse fires on every Write
-- /sync command: .claude/commands/sync.md
+## What already exists on disk (project-specific — update per project)
+Check before assuming anything needs to be created:
+- git status — is there a local repo?
+- git remote -v — is there a remote already?
+- ls .claude/ — is the hook already deployed?
+- gh repo view — does a GitHub remote exist?
+
+## What goes where
+- Claude Code CLI: file edits, code changes, compile, package, git add, git commit
+- Bash terminal: gh commands, git push, git pull, npm install -g, system operations, vsce package, code --install-extension
+- VS Code window: F5 debug, Ctrl+Shift+P commands, extension install, panel UI
+- Chrome browser: extension reload, Alt+C, Alt+V shortcuts
+
+Claude Code CLI is a coding agent — not a shell runner.
+Never ask it to create GitHub repos, push to remotes, or run system-level commands.
+Always verify what already exists before instructing creation of anything.
