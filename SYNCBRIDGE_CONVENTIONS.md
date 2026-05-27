@@ -47,3 +47,12 @@ Execute instructions: /sync
 - Replay-safe execution — same input always produces same output
 - Minimal complexity — simple composable primitives over abstraction
 - README updated with every commit
+
+## What already exists on disk
+- Local git repo: ~/repos/syncbridge — initialized, 20+ commits, master branch
+- No remote origin yet — SEP-12 will add GitHub remote and push
+- VS Code extension: compiled, packaged as syncbridge-0.0.1.vsix, installed
+- Chrome extension: loaded unpacked in Chrome from chrome-extension/
+- Three control files: claude-ai.md, claude-state.md, claude-context.md
+- Claude Code hook: .claude/settings.json — PostToolUse fires on every Write
+- /sync command: .claude/commands/sync.md

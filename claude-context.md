@@ -16,16 +16,12 @@ Claude Code CLI. Start: claude. Clear between SEPs: /clear
 
 ## Last 10 CLI actions
 
-✓ Read claude-ai.md — contains workflow explanation (no actionable instructions to execute)
-✓ No code changes made — file describes SyncBridge usage pattern, not a task
-✓ 18:22:21 wrote unknown
-✓ 18:43:25 wrote unknown
-✓ 20:46:26 wrote unknown
-✓ 21:36:19 wrote /home/rehman/repos/syncbridge/hook-path-test.txt
-✓ 21:38:20 wrote hook-path-test2.txt
-✓ 18:57:01 wrote claude-context.md
-✓ 19:22:04 wrote SYNCBRIDGE_CONVENTIONS.md
-✓ 09:37:44 wrote claude-ai.md
+✓ Phase 1 complete — SEP-00 through SEP-11
+✓ Phase 2 complete — all polish fixes
+✓ SYNCBRIDGE_CONVENTIONS.md created
+✓ Context migration includes conventions
+✓ ROADMAP.md updated with full SEP index
+✓ 13:58:23 wrote claude-state.md
 
 ## Resume prompt
 
@@ -64,3 +60,23 @@ Execute instructions: /sync
 - Ctrl+Shift+E: setup project
 - Alt+C: copy AI response (Chrome)
 - Alt+V: inject to input (Chrome)
+
+## Environment
+- OS: Ubuntu 24 (T14)
+- Node: v22.22.1
+- npm: 9.2.0
+- VS Code: 1.118.1
+- Repo: ~/repos/syncbridge
+- Branch: master
+- Extension ID: rehman.syncbridge
+
+## Project operating principles
+- One SEP at a time — scoped, tested, committed
+- Deterministic logic only — no randomness, no implicit timestamps
+- Immutable transformations — no hidden side effects
+- Stable ordering — lexical, sorted, consistent
+- Test-first validation — all SEPs include deterministic tests
+- Additive evolution — extend, never rewrite completed work
+- Replay-safe execution — same input always produces same output
+- Minimal complexity — simple composable primitives over abstraction
+- README updated with every commit
