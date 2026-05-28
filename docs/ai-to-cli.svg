@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 520" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>AI response to CLI sync</title>
+<desc>5-step flow showing how a response from an AI chat site reaches Claude Code CLI via Syncbridge.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text class="th" x="340" y="32" text-anchor="middle">AI response to CLI</text>
+<g class="node c-purple">
+<rect x="160" y="52" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="76" text-anchor="middle" dominant-baseline="central">Ask Claude something in Chrome</text>
+<text class="ts" x="340" y="96" text-anchor="middle" dominant-baseline="central">claude.ai, ChatGPT, Gemini, or any AI site</text>
+</g>
+<line x1="340" y1="108" x2="340" y2="128" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-teal">
+<rect x="160" y="130" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="154" text-anchor="middle" dominant-baseline="central">Chrome extension auto-copies response</text>
+<text class="ts" x="340" y="174" text-anchor="middle" dominant-baseline="central">Alt+C or automatic on stream complete</text>
+</g>
+<line x1="340" y1="186" x2="340" y2="206" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-blue">
+<rect x="160" y="208" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="232" text-anchor="middle" dominant-baseline="central">Switch to VS Code — press Ctrl+Shift+X</text>
+<text class="ts" x="340" y="252" text-anchor="middle" dominant-baseline="central">Writes clipboard to claude-ai.md in your project</text>
+</g>
+<line x1="340" y1="264" x2="340" y2="284" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-amber">
+<rect x="160" y="286" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="310" text-anchor="middle" dominant-baseline="central">In Claude Code CLI terminal — type /sync</text>
+<text class="ts" x="340" y="330" text-anchor="middle" dominant-baseline="central">Sends claude-ai.md contents to Claude Code CLI</text>
+</g>
+<line x1="340" y1="342" x2="340" y2="362" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-teal">
+<rect x="160" y="364" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="388" text-anchor="middle" dominant-baseline="central">Claude Code CLI receives the AI response</text>
+<text class="ts" x="340" y="408" text-anchor="middle" dominant-baseline="central">Ready to act on it — code, plan, review</text>
+</g>
+<text class="ts" x="340" y="460" text-anchor="middle">Chrome extension — VS Code extension — Claude Code CLI</text>
+</svg>

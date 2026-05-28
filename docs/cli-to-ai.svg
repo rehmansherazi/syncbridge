@@ -1,0 +1,40 @@
+<svg width="100%" viewBox="0 0 680 520" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>CLI state to AI chat</title>
+<desc>5-step flow showing how Claude Code CLI state is sent back into an AI chat via Syncbridge.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<text class="th" x="340" y="32" text-anchor="middle">CLI state to AI chat</text>
+<g class="node c-amber">
+<rect x="160" y="52" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="76" text-anchor="middle" dominant-baseline="central">Claude Code CLI runs — hook fires on save</text>
+<text class="ts" x="340" y="96" text-anchor="middle" dominant-baseline="central">PostToolUse hook writes state to claude-state.md</text>
+</g>
+<line x1="340" y1="108" x2="340" y2="128" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-blue">
+<rect x="160" y="130" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="154" text-anchor="middle" dominant-baseline="central">Open Syncbridge panel — Ctrl+Shift+S</text>
+<text class="ts" x="340" y="174" text-anchor="middle" dominant-baseline="central">Verify claude-state.md has real content</text>
+</g>
+<line x1="340" y1="186" x2="340" y2="206" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-blue">
+<rect x="160" y="208" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="232" text-anchor="middle" dominant-baseline="central">Click Regenerate context.md in panel</text>
+<text class="ts" x="340" y="252" text-anchor="middle" dominant-baseline="central">Merges state + AI response into one context file</text>
+</g>
+<line x1="340" y1="264" x2="340" y2="284" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-teal">
+<rect x="160" y="286" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="310" text-anchor="middle" dominant-baseline="central">Click Copy next to claude-context.md</text>
+<text class="ts" x="340" y="330" text-anchor="middle" dominant-baseline="central">Full context now in clipboard</text>
+</g>
+<line x1="340" y1="342" x2="340" y2="362" stroke="var(--t)" stroke-width="1" marker-end="url(#arrow)"/>
+<g class="node c-purple">
+<rect x="160" y="364" width="360" height="56" rx="8" stroke-width="0.5"/>
+<text class="th" x="340" y="388" text-anchor="middle" dominant-baseline="central">Open AI chat — press Alt+V to inject</text>
+<text class="ts" x="340" y="408" text-anchor="middle" dominant-baseline="central">Context lands in the input — press Enter</text>
+</g>
+<text class="ts" x="340" y="460" text-anchor="middle">AI now has full project context from your CLI session</text>
+</svg>

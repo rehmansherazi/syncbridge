@@ -34,6 +34,17 @@ Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity) and codi
 
 See the diagram above for the complete 13-step flow from opening VS Code to AI resuming with full context.
 
+## How it works — visual guides
+
+**AI → CLI** — send an AI response to your coding agent
+![AI to CLI flow](docs/ai-to-cli.svg)
+
+**CLI → AI** — send your CLI state back to any AI chat
+![CLI to AI flow](docs/cli-to-ai.svg)
+
+**Context migration** — resume any session with zero re-explaining
+![Context migration](docs/context-migration.svg)
+
 ## VS Code Extension Commands
 - `Syncbridge: Open Panel` — open the sync panel in column two
 - `Syncbridge: Send Clipboard to CLI` — overwrite `claude-ai.md` with current clipboard content
