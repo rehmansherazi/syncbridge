@@ -2,6 +2,25 @@
 
 AI chat to CLI sync bridge for VS Code.
 
+## Requirements
+- VS Code 1.100.0 or higher
+- Claude Code CLI installed and accessible in terminal
+- Node.js v18+
+
+## Installation
+**From VS Code Marketplace:**
+Search for "Syncbridge" in the Extensions panel and click Install.
+
+**From .vsix file:**
+```
+code --install-extension syncbridge-0.0.1.vsix
+```
+
+## Known Limitations
+- Chrome extension site adapters may break if AI site DOM changes
+- File watcher hook requires manual setup per project via Ctrl+Shift+E
+- CLI sync requires Claude Code CLI to be running in the active terminal
+
 ## What it does
 Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity) and coding CLI tools (Claude Code, Copilot, Continue) by syncing instructions and state via shared markdown files.
 
