@@ -36,6 +36,13 @@ Convert syncbridge into a first-class Claude Code MCP integration.
 
 - SEP-17: MCP server — expose update_state, read_instructions, get_context, clear_state as MCP tools
 - SEP-18: Register with Anthropic community MCP registry
+- SEP-20: Claude Code usage display in Syncbridge status bar
+  - Read ~/.claude/projects/ JSONL log files
+  - Parse token count and estimated cost from local logs
+  - Display live in Syncbridge status bar item alongside sync indicator
+  - Auto-refresh every 30 seconds
+  - No external tools or separate extensions required
+  - Clicking the status bar item opens a usage summary in the panel
 - Claude Code connects via: claude mcp add syncbridge
 - Eliminates file polling — pure event-driven tool calls
 
