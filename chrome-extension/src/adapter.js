@@ -1,74 +1,107 @@
-// Site adapters for Syncbridge Chrome extension.
-// Note: claude.ai response selector is div[data-is-streaming="false"], NOT .prose.
-
-const adapters = {
+const ADAPTERS = {
   'claude.ai': {
-    inputSelector: 'div[contenteditable="true"]',
-    responseSelector: 'div[data-is-streaming="false"]',
-    injectText: (text) => {
-      const el = document.querySelector('div[contenteditable="true"]');
-      if (!el) return false;
-      el.focus();
-      document.execCommand('insertText', false, text);
-      return true;
-    },
-    getLastResponse: () => {
-      const els = document.querySelectorAll('div[data-is-streaming="false"]');
-      if (!els.length) return null;
-      const last = els[els.length - 1];
-      return last.innerText;
-    }
+    inputSelectors: [
+      'div[contenteditable="true"]',
+      'div[contenteditable="true"][data-placeholder]',
+      '.ProseMirror'
+    ],
+    responseSelectors: [
+      'div[data-is-streaming="false"]',
+      '.prose',
+      '[class*="message"]:last-child'
+    ]
   },
   'chatgpt.com': {
-    inputSelector: '#prompt-textarea',
-    responseSelector: '.markdown',
-    injectText: (text) => {
-      const el = document.querySelector('#prompt-textarea');
-      if (!el) return false;
-      el.focus();
-      document.execCommand('insertText', false, text);
-      return true;
-    },
-    getLastResponse: () => {
-      const els = document.querySelectorAll('.markdown');
-      if (!els.length) return null;
-      return els[els.length - 1].innerText;
-    }
+    inputSelectors: [
+      '#prompt-textarea',
+      'div[contenteditable="true"]',
+      'textarea[placeholder]'
+    ],
+    responseSelectors: [
+      '.markdown',
+      '[class*="prose"]',
+      '[data-message-author-role="assistant"]:last-child'
+    ]
   },
   'gemini.google.com': {
-    inputSelector: 'rich-textarea',
-    responseSelector: '.response-content',
-    injectText: (text) => {
-      const el = document.querySelector('rich-textarea');
-      if (!el) return false;
-      el.focus();
-      document.execCommand('insertText', false, text);
-      return true;
-    },
-    getLastResponse: () => {
-      const els = document.querySelectorAll('.response-content');
-      return els.length ? els[els.length - 1].innerText : null;
-    }
+    inputSelectors: [
+      'rich-textarea',
+      'div[contenteditable="true"]',
+      'textarea'
+    ],
+    responseSelectors: [
+      '.response-content',
+      'model-response',
+      '[class*="response"]:last-child'
+    ]
   },
-  'www.perplexity.ai': {
-    inputSelector: '#ask-input',
-    responseSelector: '.prose',
-    injectText: (text) => {
-      const el = document.querySelector('#ask-input');
-      if (!el) return false;
-      el.focus();
-      document.execCommand('insertText', false, text);
-      return true;
-    },
-    getLastResponse: () => {
-      const els = document.querySelectorAll('.prose');
-      return els.length ? els[els.length - 1].innerText : null;
-    }
+  'perplexity.ai': {
+    inputSelectors: [
+      '#ask-input',
+      'textarea[placeholder]',
+      'div[contenteditable="true"]'
+    ],
+    responseSelectors: [
+      '.prose',
+      '[class*="answer"]',
+      '[class*="response"]:last-child'
+    ]
   }
 };
 
-const hostname = window.location.hostname;
-if (adapters[hostname]) {
-  window.SyncbridgeAdapter = adapters[hostname];
-  console.log(`Syncbridge: adapter loaded for ${hostname}`);
+function getAdapter() {
+  const host = location.hostname.replace('www.', '');
+  return ADAPTERS[host] || null;
+}
+
+function findElement(selectors) {
+  for (const sel of selectors) {
+    try {
+      const el = document.querySelector(sel);
+      if (el) return el;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function findElements(selectors) {
+  for (const sel of selectors) {
+    try {
+      const els = document.querySelectorAll(sel);
+      if (els.length) return els;
+    } catch (e) {}
+  }
+  return null;
+}
+
+function injectText(text) {
+  const adapter = getAdapter();
+  if (!adapter) return false;
+  const el = findElement(adapter.inputSelectors);
+  if (!el) return false;
+  el.focus();
+  try {
+    const inserted = document.execCommand('insertText', false, text);
+    if (inserted) return true;
+  } catch (e) {}
+  try {
+    el.dispatchEvent(new InputEvent('input', {
+      bubbles: true,
+      cancelable: true,
+      data: text,
+      inputType: 'insertText'
+    }));
+    el.textContent = text;
+    return true;
+  } catch (e) {}
+  return false;
+}
+
+function getLastResponse() {
+  const adapter = getAdapter();
+  if (!adapter) return null;
+  const els = findElements(adapter.responseSelectors);
+  if (!els || !els.length) return null;
+  const text = els[els.length - 1].innerText;
+  return text && text.trim().length > 0 ? text.trim() : null;
 }

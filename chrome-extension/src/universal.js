@@ -1,66 +1,74 @@
-const Syncbridge = {
-  site: window.location.hostname,
-
-  readClipboard: async () => {
-    return await navigator.clipboard.readText();
-  },
-
-  writeClipboard: async (text) => {
-    await navigator.clipboard.writeText(text);
-  },
-
-  getAdapter: () => {
-    if (window.SyncbridgeAdapter) return window.SyncbridgeAdapter;
-    return null;
-  },
-
-  injectToInput: async (text) => {
-    const adapter = Syncbridge.getAdapter();
-    if (!adapter) return false;
-    return adapter.injectText(text);
-  },
-
-  extractLastResponse: () => {
-    const adapter = Syncbridge.getAdapter();
-    if (!adapter) return null;
-    return adapter.getLastResponse();
-  }
-};
-
-window.Syncbridge = Syncbridge;
+const STABLE_THRESHOLD = 3;
+const POLL_INTERVAL_MS = 800;
+const START_DELAY_MS = 2000;
+const MAX_NULL_STREAK = 30;
 
 function watchForResponseComplete() {
-  const adapter = Syncbridge.getAdapter();
-  if (!adapter) return;
-
-  let lastText = '';
+  let last = null;
   let stableCount = 0;
-  const STABLE_THRESHOLD = 3;
-  const POLL_INTERVAL = 800;
+  let nullStreak = 0;
+  let intervalId = null;
 
-  const interval = setInterval(async () => {
-    const current = Syncbridge.extractLastResponse();
-    if (!current || current.length < 20) return;
+  function stop() {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+      window._syncbridgeWatcher = null;
+    }
+  }
 
-    if (current === lastText) {
+  function tick() {
+    const current = getLastResponse();
+
+    if (!current) {
+      nullStreak++;
+      if (nullStreak >= MAX_NULL_STREAK) stop();
+      stableCount = 0;
+      last = null;
+      return;
+    }
+
+    nullStreak = 0;
+
+    if (current === last) {
       stableCount++;
-      if (stableCount === STABLE_THRESHOLD) {
-        await Syncbridge.writeClipboard(current);
-        const status = document.getElementById('syncbridge-status');
-        if (status) status.textContent = '✓ Auto-copied response';
-        setTimeout(() => {
-          if (status) status.textContent = 'Ready';
-        }, 3000);
+      if (stableCount >= STABLE_THRESHOLD) {
+        try {
+          navigator.clipboard.writeText(current).then(() => {
+            showCopiedBadge();
+          }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = current;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showCopiedBadge();
+          });
+        } catch (e) {}
+        stableCount = 0;
+        last = null;
       }
     } else {
-      lastText = current;
       stableCount = 0;
+      last = current;
     }
-  }, POLL_INTERVAL);
+  }
 
-  window._syncbridgeWatcher = interval;
+  stop();
+  intervalId = setInterval(tick, POLL_INTERVAL_MS);
+  window._syncbridgeWatcher = intervalId;
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else {
+      setTimeout(() => {
+        if (!window._syncbridgeWatcher) watchForResponseComplete();
+      }, START_DELAY_MS);
+    }
+  });
 }
 
-window.addEventListener('load', () => {
-  setTimeout(watchForResponseComplete, 2000);
-});
+setTimeout(watchForResponseComplete, START_DELAY_MS);
