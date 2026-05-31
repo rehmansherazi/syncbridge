@@ -17,7 +17,7 @@ code --install-extension syncbridge-0.0.1.vsix
 ```
 
 ## Known Limitations
-- Chrome extension site adapters may break if AI site DOM changes
+- Chrome extension site adapters use fallback selector chains — resilient to minor DOM changes but major site redesigns may still require an update
 - File watcher hook requires manual setup per project via Ctrl+Shift+E
 - CLI sync requires Claude Code CLI to be running in the active terminal
 
@@ -37,13 +37,10 @@ See the diagram above for the complete 13-step flow from opening VS Code to AI r
 ## How it works — visual guides
 
 **AI → CLI** — send an AI response to your coding agent
-![AI to CLI flow](docs/ai-to-cli.svg)
 
 **CLI → AI** — send your CLI state back to any AI chat
-![CLI to AI flow](docs/cli-to-ai.svg)
 
 **Context migration** — resume any session with zero re-explaining
-![Context migration](docs/context-migration.svg)
 
 ## VS Code Extension Commands
 - `Syncbridge: Open Panel` — open the sync panel in column two
@@ -128,7 +125,7 @@ Supported sites:
 - claude.ai
 - chatgpt.com
 - gemini.google.com
-- www.perplexity.ai
+- perplexity.ai
 
 ## Keyboard Shortcuts
 
