@@ -22,7 +22,7 @@ code --install-extension syncbridge-0.0.1.vsix
 - CLI sync requires Claude Code CLI to be running in the active terminal
 
 ## What it does
-Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity) and coding CLI tools (Claude Code, Copilot, Continue) by syncing instructions and state via shared markdown files.
+Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity, Mistral, Grok, Copilot) and coding CLI tools (Claude Code, Copilot, Continue) by syncing instructions and state via shared markdown files.
 
 ## Architecture
 - VS Code extension (this) — sidebar panel, file watcher, status bar, clipboard bridge
@@ -126,6 +126,9 @@ Supported sites:
 - chatgpt.com
 - gemini.google.com
 - perplexity.ai
+- mistral.ai
+- x.ai (Grok)
+- copilot.microsoft.com (Microsoft Copilot)
 
 ## Keyboard Shortcuts
 

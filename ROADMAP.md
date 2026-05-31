@@ -29,7 +29,7 @@ Core sync bridge between AI chat and Claude Code CLI.
 - ✓ SEP-13: Publish VS Code extension to Marketplace (vsce publish)
 - ✓ SEP-14: Package and submit Chrome extension to Chrome Web Store
 - ✓ SEP-15: Site adapter resilience — fallback selectors when AI sites change DOM
-- SEP-16: Additional AI sites — Mistral, Grok, Microsoft Copilot
+- ✓ SEP-16: Additional AI sites — Mistral, Grok, Microsoft Copilot
 
 ## Phase 4 — MCP Server (Open Source)
 Convert syncbridge into a first-class Claude Code MCP integration.
