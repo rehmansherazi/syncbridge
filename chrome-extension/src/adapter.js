@@ -46,6 +46,42 @@ const ADAPTERS = {
       '[class*="answer"]',
       '[class*="response"]:last-child'
     ]
+  },
+  'mistral.ai': {
+    inputSelectors: [
+      'textarea[placeholder]',
+      'div[contenteditable="true"]',
+      'textarea'
+    ],
+    responseSelectors: [
+      '.message-content',
+      '[class*="assistant"]:last-child',
+      '[class*="message"]:last-child'
+    ]
+  },
+  'x.ai': {
+    inputSelectors: [
+      'textarea[placeholder]',
+      'div[contenteditable="true"]',
+      'textarea'
+    ],
+    responseSelectors: [
+      '[class*="message"]:last-child',
+      '[class*="response"]:last-child',
+      '.prose'
+    ]
+  },
+  'copilot.microsoft.com': {
+    inputSelectors: [
+      'textarea[placeholder]',
+      'div[contenteditable="true"]',
+      '#userInput'
+    ],
+    responseSelectors: [
+      '[class*="message"]:last-child',
+      '[class*="response"]:last-child',
+      '.prose'
+    ]
   }
 };
 
