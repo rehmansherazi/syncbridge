@@ -173,3 +173,15 @@ README is updated with every commit as a project principle.
 
 ## Development
 Built using VS Code Extension API + Claude Code CLI with deterministic SEP-based workflow.
+
+## Privacy
+
+Syncbridge does not collect, transmit, or store any user data on external servers.
+
+- Clipboard access is used only to read AI responses and write context locally to your project files
+- Storage permission saves only the active project name in your browser locally
+- No analytics, no tracking, no telemetry
+- No data leaves your machine
+- All processing happens locally between your browser, VS Code, and terminal
+
+For questions contact: mrsherazi@hotmail.com
