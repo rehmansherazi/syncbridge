@@ -16,6 +16,20 @@ Search for "Syncbridge" in the Extensions panel and click Install.
 code --install-extension syncbridge-0.0.1.vsix
 ```
 
+## MCP server (Claude Code CLI integration)
+
+Connect Syncbridge directly to Claude Code CLI as an MCP tool:
+
+```bash
+claude mcp add syncbridge node /path/to/syncbridge/mcp-server/index.js
+```
+
+Available tools:
+- `update_state` — push CLI state to Syncbridge
+- `read_instructions` — pull latest AI instructions
+- `get_context` — get full merged context
+- `clear_state` — reset state for a new session
+
 ## Known Limitations
 - Chrome extension site adapters use fallback selector chains — resilient to minor DOM changes but major site redesigns may still require an update
 - File watcher hook requires manual setup per project via Ctrl+Shift+E

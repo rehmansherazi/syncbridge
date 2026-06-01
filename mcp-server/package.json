@@ -1,0 +1,14 @@
+{
+  "name": "syncbridge-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Syncbridge — exposes Claude Code CLI tools for AI chat sync",
+  "main": "index.js",
+  "bin": {
+    "syncbridge-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["mcp", "syncbridge", "claude", "ai", "cli"],
+  "license": "MIT"
+}

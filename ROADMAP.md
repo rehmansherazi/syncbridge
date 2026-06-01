@@ -34,7 +34,7 @@ Core sync bridge between AI chat and Claude Code CLI.
 ## Phase 4 — MCP Server (Open Source)
 Convert syncbridge into a first-class Claude Code MCP integration.
 
-- SEP-17: MCP server — expose update_state, read_instructions, get_context, clear_state as MCP tools
+- ✓ SEP-17: MCP server — exposes update_state, read_instructions, get_context, clear_state as MCP tools
 - SEP-18: Register with Anthropic community MCP registry
 - SEP-20: Claude Code usage display in Syncbridge status bar
   - Read ~/.claude/projects/ JSONL log files
