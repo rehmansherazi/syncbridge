@@ -54,8 +54,9 @@ function readClaudeUsage(): { tokens: number; costUsd: number } | null {
       }
     }
 
-    if (totalTokens === 0 && totalCost === 0) return null;
-    return { tokens: totalTokens, costUsd: totalCost };
+    if (totalTokens === 0) return null;
+    const estimatedCost = totalCost > 0 ? totalCost : (totalTokens * 0.000003);
+    return { tokens: totalTokens, costUsd: estimatedCost };
   } catch (e) {
     return null;
   }
