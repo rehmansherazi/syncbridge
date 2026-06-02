@@ -61,14 +61,16 @@ const ADAPTERS = {
   },
   'x.ai': {
     inputSelectors: [
-      'textarea[placeholder]',
-      'div[contenteditable="true"]',
-      'textarea'
+      'div[data-testid="chat-input"] div[contenteditable="true"]',
+      'div.tiptap.ProseMirror',
+      'div[contenteditable="true"][aria-label="Ask Grok anything"]',
+      'div[contenteditable="true"]'
     ],
     responseSelectors: [
-      '[class*="message"]:last-child',
-      '[class*="response"]:last-child',
-      '.prose'
+      'div[data-testid="assistant-message"] .response-content-markdown',
+      '.response-content-markdown',
+      'div[data-testid="assistant-message"]',
+      '[class*="message"]:last-child'
     ]
   },
   'copilot.microsoft.com': {
@@ -87,6 +89,7 @@ const ADAPTERS = {
 
 function getAdapter() {
   const host = location.hostname.replace('www.', '');
+  if (host === 'grok.com') return ADAPTERS['x.ai'];
   return ADAPTERS[host] || null;
 }
 
