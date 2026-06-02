@@ -41,15 +41,18 @@ function readClaudeUsage(): { tokens: number; costUsd: number } | null {
         for (const line of lines) {
           try {
             const entry = JSON.parse(line);
-            const entryDate = entry.timestamp
-              ? new Date(entry.timestamp).toISOString().slice(0, 10)
+            const ts = entry.timestamp || entry.message?.timestamp;
+            const entryDate = ts
+              ? new Date(ts).toISOString().slice(0, 10)
               : null;
-            if (entryDate !== today) continue;
-            if (entry.usage) {
-              totalTokens += (entry.usage.input_tokens || 0) + (entry.usage.output_tokens || 0);
+            if (!entryDate || entryDate !== today) continue;
+            const usage = entry.usage || entry.message?.usage;
+            if (usage) {
+              totalTokens += (usage.input_tokens || 0) + (usage.output_tokens || 0);
             }
-            if (entry.costUSD) {
-              totalCost += entry.costUSD;
+            const cost = entry.costUSD || entry.message?.costUSD;
+            if (cost) {
+              totalCost += cost;
             }
           } catch (e) {}
         }
