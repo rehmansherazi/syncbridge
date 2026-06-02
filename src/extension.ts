@@ -16,6 +16,58 @@ function isClaudeCliInstalled(): boolean {
   }
 }
 
+function readClaudeUsage(): { tokens: number; costUsd: number } | null {
+  try {
+    const os = require('os');
+    const projectsDir = path.join(os.homedir(), '.claude', 'projects');
+    if (!fs.existsSync(projectsDir)) return null;
+
+    const dirs = fs.readdirSync(projectsDir);
+    let totalTokens = 0;
+    let totalCost = 0;
+    const today = new Date().toISOString().slice(0, 10);
+
+    for (const dir of dirs) {
+      const dirPath = path.join(projectsDir, dir);
+      const stat = fs.statSync(dirPath);
+      if (!stat.isDirectory()) continue;
+
+      const files = fs.readdirSync(dirPath).filter((f: string) => f.endsWith('.jsonl'));
+      for (const file of files) {
+        const filePath = path.join(dirPath, file);
+        const lines = fs.readFileSync(filePath, 'utf8').split('\n').filter(Boolean);
+        for (const line of lines) {
+          try {
+            const entry = JSON.parse(line);
+            const entryDate = entry.timestamp
+              ? new Date(entry.timestamp).toISOString().slice(0, 10)
+              : null;
+            if (entryDate !== today) continue;
+            if (entry.usage) {
+              totalTokens += (entry.usage.input_tokens || 0) + (entry.usage.output_tokens || 0);
+            }
+            if (entry.costUSD) {
+              totalCost += entry.costUSD;
+            }
+          } catch (e) {}
+        }
+      }
+    }
+
+    if (totalTokens === 0 && totalCost === 0) return null;
+    return { tokens: totalTokens, costUsd: totalCost };
+  } catch (e) {
+    return null;
+  }
+}
+
+function formatUsage(usage: { tokens: number; costUsd: number } | null): string {
+  if (!usage) return '';
+  const k = usage.tokens >= 1000 ? `${(usage.tokens / 1000).toFixed(1)}k` : `${usage.tokens}`;
+  const cost = `$${usage.costUsd.toFixed(3)}`;
+  return ` · ${k} tok ${cost}`;
+}
+
 function getWorkspaceRoot(context: vscode.ExtensionContext): string | null {
     const pinned = context.globalState.get<string>('syncbridge.root');
     if (pinned) return pinned;
@@ -86,6 +138,20 @@ export function activate(context: vscode.ExtensionContext) {
     statusBar.tooltip = 'AI ↔ CLI sync bridge is active';
     statusBar.show();
 
+    const updateStatusBar = () => {
+      const usage = readClaudeUsage();
+      const usageSuffix = formatUsage(usage);
+      const base = statusBar.text.split(' · ')[0];
+      statusBar.text = base + usageSuffix;
+      if (usage) {
+        statusBar.tooltip = `AI ↔ CLI sync bridge active\nToday: ${usage.tokens.toLocaleString()} tokens · $${usage.costUsd.toFixed(4)}`;
+      }
+    };
+
+    updateStatusBar();
+    const usageInterval = setInterval(updateStatusBar, 30000);
+    context.subscriptions.push({ dispose: () => clearInterval(usageInterval) });
+
     const stateFile = path.join(root, 'claude-state.md');
     const watcher = vscode.workspace.createFileSystemWatcher(stateFile);
 
@@ -95,6 +161,7 @@ export function activate(context: vscode.ExtensionContext) {
         const last = lines[lines.length - 1] ?? 'idle';
         statusBar.text = `$(sync) ${last.slice(0, 40)}`;
         statusBar.tooltip = content;
+        updateStatusBar();
     });
 
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
