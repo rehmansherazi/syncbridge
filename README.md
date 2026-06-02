@@ -21,7 +21,7 @@ code --install-extension syncbridge-0.0.1.vsix
 Connect Syncbridge directly to Claude Code CLI as an MCP tool:
 
 ```bash
-claude mcp add syncbridge node /path/to/syncbridge/mcp-server/index.js
+claude mcp add syncbridge npx syncbridge-mcp
 ```
 
 Available tools:
