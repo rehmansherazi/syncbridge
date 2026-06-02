@@ -3,6 +3,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { SyncBridgePanel } from './panel';
 
+function isClaudeCliInstalled(): boolean {
+  try {
+    const result = require('child_process').spawnSync('claude', ['--version'], {
+      encoding: 'utf8',
+      timeout: 3000,
+      shell: true
+    });
+    return result.status === 0;
+  } catch (e) {
+    return false;
+  }
+}
+
 function getWorkspaceRoot(context: vscode.ExtensionContext): string | null {
     const pinned = context.globalState.get<string>('syncbridge.root');
     if (pinned) return pinned;
@@ -46,6 +59,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     initControlFiles(root);
 
+    const cliAvailable = isClaudeCliInstalled();
+    context.globalState.update('syncbridge.cliAvailable', cliAvailable);
+
     const isFirstRun = !context.globalState.get('syncbridge.welcomed');
     if (isFirstRun) {
         context.globalState.update('syncbridge.welcomed', true);
@@ -82,7 +98,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
-        SyncBridgePanel.show(root);
+        SyncBridgePanel.createOrShow(root, cliAvailable);
     });
     watcher.onDidChange(() => SyncBridgePanel.currentPanel?.refresh());
 
@@ -100,6 +116,11 @@ export function activate(context: vscode.ExtensionContext) {
         const filepath = path.join(root, 'claude-ai.md');
         fs.writeFileSync(filepath, content, 'utf8');
         vscode.window.showInformationMessage(`Syncbridge: claude-ai.md updated in ${path.basename(root)}`);
+        if (!isClaudeCliInstalled()) {
+            vscode.window.showInformationMessage(
+                'Claude Code CLI not detected. claude-ai.md written — use it manually or install Claude Code CLI for auto-sync.'
+            );
+        }
         SyncBridgePanel.currentPanel?.refresh();
     });
 
@@ -127,6 +148,13 @@ export function activate(context: vscode.ExtensionContext) {
         const root = getWorkspaceRoot(context);
         if (!root) {
             vscode.window.showWarningMessage('Syncbridge: no active project set.');
+            return;
+        }
+
+        if (!isClaudeCliInstalled()) {
+            vscode.window.showWarningMessage(
+                'Claude Code CLI not found. Setup skipped — install Claude Code CLI to enable full sync.'
+            );
             return;
         }
 

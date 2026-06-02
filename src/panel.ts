@@ -6,10 +6,12 @@ export class SyncBridgePanel {
     public static currentPanel: SyncBridgePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
     private readonly _root: string;
+    private _cliAvailable: boolean;
 
-    private constructor(panel: vscode.WebviewPanel, root: string) {
+    private constructor(panel: vscode.WebviewPanel, root: string, cliAvailable: boolean) {
         this._panel = panel;
         this._root = root;
+        this._cliAvailable = cliAvailable;
         this._update();
 
         this._panel.webview.onDidReceiveMessage((msg) => {
@@ -72,7 +74,7 @@ export class SyncBridgePanel {
         });
     }
 
-    public static show(root: string): void {
+    public static createOrShow(root: string, cliAvailable: boolean): void {
         if (SyncBridgePanel.currentPanel) {
             SyncBridgePanel.currentPanel._panel.reveal();
             return;
@@ -85,7 +87,7 @@ export class SyncBridgePanel {
             { enableScripts: true }
         );
 
-        SyncBridgePanel.currentPanel = new SyncBridgePanel(panel, root);
+        SyncBridgePanel.currentPanel = new SyncBridgePanel(panel, root, cliAvailable);
     }
 
     public refresh(): void {
@@ -101,6 +103,9 @@ export class SyncBridgePanel {
         const ai    = this._read('claude-ai.md');
         const state = this._read('claude-state.md');
         const ctx   = this._read('claude-context.md');
+        const cliBanner = this._cliAvailable
+            ? `<div class="banner banner-ok">● Claude Code CLI connected — full sync active</div>`
+            : `<div class="banner banner-warn">⚠ Claude Code CLI not detected — clipboard bridge active, auto-sync disabled</div>`;
 
         this._panel.webview.html = `<!DOCTYPE html>
 <html>
@@ -121,12 +126,16 @@ export class SyncBridgePanel {
     border-radius: 4px;
     margin-bottom: 12px;
   }
+  .banner { padding: 6px 12px; border-radius: 4px; font-size: 12px; margin-bottom: 12px; }
+  .banner-ok { background: #1a3a1a; color: #4ec94e; border: 1px solid #2d5a2d; }
+  .banner-warn { background: #3a2a1a; color: #d4a017; border: 1px solid #5a3d1a; }
 </style>
 </head>
 <body>
   <div id="sb-project">
     <span>📁 ${path.basename(this._root)}</span>
   </div>
+  ${cliBanner}
   <h3>claude-ai.md → CLI</h3>
   <pre>${ai}</pre>
   <button onclick="copy('ai')">Copy</button>
