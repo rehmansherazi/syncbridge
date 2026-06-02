@@ -12,7 +12,7 @@
   "host_permissions": ["https://claude.ai/*", "https://chatgpt.com/*", "https://gemini.google.com/*", "https://www.perplexity.ai/*", "https://mistral.ai/*", "https://chat.mistral.ai/*", "https://x.ai/*", "https://grok.com/*", "https://copilot.microsoft.com/*"],
   "content_scripts": [
     {
-      "matches": ["https://claude.ai/*", "https://chatgpt.com/*", "https://gemini.google.com/*", "https://www.perplexity.ai/*", "https://mistral.ai/*", "https://x.ai/*", "https://grok.com/*", "https://copilot.microsoft.com/*"],
+      "matches": ["https://claude.ai/*", "https://chatgpt.com/*", "https://gemini.google.com/*", "https://www.perplexity.ai/*", "https://mistral.ai/*", "https://chat.mistral.ai/*", "https://x.ai/*", "https://grok.com/*", "https://copilot.microsoft.com/*"],
       "js": ["src/adapter.js", "src/syncbridge.js", "src/universal.js", "src/bot.js"],
       "css": ["src/bot.css"],
       "run_at": "document_idle"

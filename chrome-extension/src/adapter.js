@@ -75,14 +75,16 @@ const ADAPTERS = {
   },
   'copilot.microsoft.com': {
     inputSelectors: [
-      'textarea[placeholder]',
-      'div[contenteditable="true"]',
-      '#userInput'
+      'textarea#userInput',
+      'textarea[data-testid="composer-input"]',
+      'textarea[placeholder="Message Copilot"]',
+      'textarea'
     ],
     responseSelectors: [
-      '[class*="message"]:last-child',
-      '[class*="response"]:last-child',
-      '.prose'
+      'div[data-testid="ai-message"] .font-ligatures-none',
+      'div[data-content="ai-message"]',
+      'div[data-testid="ai-message"]',
+      '[class*="message"]:last-child'
     ]
   }
 };
