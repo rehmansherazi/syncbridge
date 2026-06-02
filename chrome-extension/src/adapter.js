@@ -119,10 +119,23 @@ function injectText(text) {
   const el = findElement(adapter.inputSelectors);
   if (!el) return false;
   el.focus();
+
   try {
     const inserted = document.execCommand('insertText', false, text);
     if (inserted) return true;
   } catch (e) {}
+
+  try {
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData('text/plain', text);
+    el.dispatchEvent(new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      clipboardData: dataTransfer
+    }));
+    return true;
+  } catch (e) {}
+
   try {
     el.dispatchEvent(new InputEvent('input', {
       bubbles: true,
@@ -133,6 +146,7 @@ function injectText(text) {
     el.textContent = text;
     return true;
   } catch (e) {}
+
   return false;
 }
 
