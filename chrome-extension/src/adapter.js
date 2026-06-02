@@ -49,14 +49,14 @@ const ADAPTERS = {
   },
   'mistral.ai': {
     inputSelectors: [
-      'textarea[placeholder]',
-      'div[contenteditable="true"]',
-      'textarea'
+      'div.ProseMirror[data-placeholder="Ask anything"]',
+      'div.ProseMirror[contenteditable="true"]',
+      'div[contenteditable="true"]'
     ],
     responseSelectors: [
-      '.message-content',
-      '[class*="assistant"]:last-child',
-      '[class*="message"]:last-child'
+      'div[data-message-part-type="answer"]',
+      '.markdown-container-style',
+      '[data-message-author-role="assistant"]:last-child'
     ]
   },
   'x.ai': {
@@ -90,6 +90,7 @@ const ADAPTERS = {
 function getAdapter() {
   const host = location.hostname.replace('www.', '');
   if (host === 'grok.com') return ADAPTERS['x.ai'];
+  if (host === 'chat.mistral.ai') return ADAPTERS['mistral.ai'];
   return ADAPTERS[host] || null;
 }
 
