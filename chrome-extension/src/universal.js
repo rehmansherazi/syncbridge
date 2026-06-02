@@ -1,3 +1,12 @@
+function showCopiedBadge() {
+  const status = document.getElementById('syncbridge-status');
+  if (status) {
+    const prev = status.textContent;
+    status.textContent = '✓ Auto-copied response';
+    setTimeout(() => { status.textContent = prev; }, 2000);
+  }
+}
+
 const STABLE_THRESHOLD = 3;
 const POLL_INTERVAL_MS = 800;
 const START_DELAY_MS = 2000;
