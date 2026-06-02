@@ -2,7 +2,7 @@
   "name": "syncbridge",
   "displayName": "Syncbridge",
   "description": "AI chat to CLI sync bridge",
-  "publisher": "rehman",
+  "publisher": "rehmansherazi",
   "version": "0.0.1",
   "repository": {
     "type": "git",
@@ -41,6 +41,10 @@
       {
         "command": "syncbridge.setupProject",
         "title": "Syncbridge: Setup Project"
+      },
+      {
+        "command": "syncbridge.openUsage",
+        "title": "Syncbridge: Open Claude Usage"
       }
     ],
     "keybindings": [

@@ -72,7 +72,7 @@ function formatUsage(usage: { tokens: number; costUsd: number } | null): string 
   if (!usage) return '';
   const k = usage.tokens >= 1000 ? `${(usage.tokens / 1000).toFixed(1)}k` : `${usage.tokens}`;
   const cost = `$${usage.costUsd.toFixed(3)}`;
-  return ` · ${k} tok ${cost}`;
+  return ` · ${k} tok - ${cost} · click for limits`;
 }
 
 function getWorkspaceRoot(context: vscode.ExtensionContext): string | null {
@@ -143,6 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
     const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     statusBar.text = '$(sync) Syncbridge';
     statusBar.tooltip = 'AI ↔ CLI sync bridge is active';
+    statusBar.command = 'syncbridge.openUsage';
     statusBar.show();
 
     const updateStatusBar = () => {
@@ -262,6 +263,12 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.showInformationMessage(`Syncbridge: project setup complete in ${path.basename(root)}`);
     });
+
+    context.subscriptions.push(
+      vscode.commands.registerCommand('syncbridge.openUsage', () => {
+        vscode.env.openExternal(vscode.Uri.parse('https://claude.ai/settings/usage'));
+      })
+    );
 
     context.subscriptions.push(statusBar, watcher, openPanel, sendToCLI, setRoot, setupProject);
 }
