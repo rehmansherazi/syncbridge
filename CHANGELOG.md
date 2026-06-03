@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.8] - 2026-06-03
+### Fixed
+- Bash hook command truncation increased from 50 to 120 characters
+- Test .txt files excluded from vsix package via .vscodeignore
+
 ## [0.0.7] - 2026-06-03
 ### Fixed
 - File watcher now recreates when active project changes via Ctrl+Shift+A

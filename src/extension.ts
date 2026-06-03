@@ -273,7 +273,7 @@ export function activate(context: vscode.ExtensionContext) {
                             matcher: "Bash",
                             hooks: [{
                                 type: "command",
-                                command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); cmd=ti.get('command','unknown')[:50]; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' ran: '+cmd+'\\n'; open('claude-state.md','a').write(line)\""
+                                command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); cmd=ti.get('command','unknown')[:120]; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' ran: '+cmd+'\\n'; open('claude-state.md','a').write(line)\""
                             }]
                         }
                     ]
