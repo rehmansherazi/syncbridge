@@ -106,7 +106,7 @@ function initControlFiles(root: string): void {
 export function activate(context: vscode.ExtensionContext) {
     console.log('activate() called');
 
-    const root = getWorkspaceRoot(context);
+    let root = getWorkspaceRoot(context);
 
     if (!root) {
         vscode.window.showWarningMessage('Syncbridge: no workspace folder open.');
@@ -170,6 +170,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
+        if (!root) { vscode.window.showWarningMessage('Syncbridge: no active project set.'); return; }
         SyncBridgePanel.createOrShow(root, cliAvailable);
     });
     watcher.onDidChange(() => SyncBridgePanel.currentPanel?.refresh());
@@ -213,7 +214,9 @@ export function activate(context: vscode.ExtensionContext) {
         if (!picked) return;
         context.globalState.update('syncbridge.root', picked.folder.uri.fsPath);
         vscode.window.showInformationMessage(`Syncbridge: active project set to ${picked.label}`);
-        SyncBridgePanel.currentPanel?.updateRoot(picked.folder.uri.fsPath);
+        root = picked.folder.uri.fsPath;
+        context.globalState.update('syncbridge.root', root);
+        SyncBridgePanel.currentPanel?.updateRoot(root);
     });
 
     const setupProject = vscode.commands.registerCommand('syncbridge.setupProject', async () => {
