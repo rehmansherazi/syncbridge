@@ -10,18 +10,24 @@ function createBot() {
         <button id="sb-copy-response">↑ Copy AI response</button>
         <button id="sb-inject-clipboard">↓ Inject clipboard to input</button>
         <div id="syncbridge-status">Ready</div>
+        <div id="sb-close-row" style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.15);padding-top:8px;text-align:center;">
+          <button id="sb-close-btn" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;width:100%;">✕ Hide panel</button>
+        </div>
       </div>
     </div>
     <div id="syncbridge-tab"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+    <div id="sb-active-dot" style="display:none;position:absolute;top:-4px;right:-4px;width:10px;height:10px;background:#1D9E75;border-radius:50%;border:2px solid #fff;"></div>
   `;
 
   document.body.appendChild(bot);
 
   const status = document.getElementById('syncbridge-status');
   const panel = document.getElementById('syncbridge-panel');
-  const tab = document.getElementById('syncbridge-tab');
 
-  tab.addEventListener('click', () => {
+  document.getElementById('syncbridge-tab').addEventListener('click', () => {
+    const dot = document.getElementById('sb-active-dot');
+    panel.style.display = '';
+    dot.style.display = 'none';
     panel.classList.toggle('pinned');
   });
 
@@ -68,6 +74,20 @@ function createBot() {
     }
     const ok = await Syncbridge.injectToInput(text);
     status.textContent = ok ? '✓ Injected to input' : '✗ Input not found';
+  });
+
+  document.getElementById('sb-close-btn').addEventListener('click', () => {
+    const dot = document.getElementById('sb-active-dot');
+    const status = document.getElementById('syncbridge-status');
+    status.textContent = 'Running in background — click tab to restore';
+
+    setTimeout(() => {
+      panel.classList.remove('pinned');
+      panel.style.display = 'none';
+      dot.style.display = 'block';
+      bot.title = 'Syncbridge active in background — click to restore';
+      status.textContent = 'Ready';
+    }, 1500);
   });
 
   document.addEventListener('keydown', (e) => {
