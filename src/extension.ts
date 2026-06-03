@@ -213,7 +213,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (!picked) return;
         context.globalState.update('syncbridge.root', picked.folder.uri.fsPath);
         vscode.window.showInformationMessage(`Syncbridge: active project set to ${picked.label}`);
-        SyncBridgePanel.currentPanel?.refresh();
+        SyncBridgePanel.currentPanel?.updateRoot(picked.folder.uri.fsPath);
     });
 
     const setupProject = vscode.commands.registerCommand('syncbridge.setupProject', async () => {
@@ -240,13 +240,22 @@ export function activate(context: vscode.ExtensionContext) {
         if (!fs.existsSync(settingsPath)) {
             const settings = {
                 hooks: {
-                    PostToolUse: [{
-                        matcher: "Write",
-                        hooks: [{
-                            type: "command",
-                            command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); fp=ti.get('file_path','unknown'); rel=os.path.relpath(fp,os.getcwd()) if fp!='unknown' else 'unknown'; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' wrote '+rel+'\\n'; open('claude-state.md','a').write(line)\""
-                        }]
-                    }]
+                    PostToolUse: [
+                        {
+                            matcher: "Write",
+                            hooks: [{
+                                type: "command",
+                                command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); fp=ti.get('file_path','unknown'); rel=os.path.relpath(fp,os.getcwd()) if fp!='unknown' else 'unknown'; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' wrote '+rel+'\\n'; open('claude-state.md','a').write(line)\""
+                            }]
+                        },
+                        {
+                            matcher: "Bash",
+                            hooks: [{
+                                type: "command",
+                                command: "python3 -c \"import sys,json,os,datetime; d=json.load(sys.stdin); ti=d.get('tool_input',{}); cmd=ti.get('command','unknown')[:50]; line='\\u2713 '+datetime.datetime.now().strftime('%H:%M:%S')+' ran: '+cmd+'\\n'; open('claude-state.md','a').write(line)\""
+                            }]
+                        }
+                    ]
                 }
             };
             fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), 'utf8');

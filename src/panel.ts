@@ -5,7 +5,7 @@ import * as path from 'path';
 export class SyncBridgePanel {
     public static currentPanel: SyncBridgePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
-    private readonly _root: string;
+    private _root: string;
     private _cliAvailable: boolean;
 
     private constructor(panel: vscode.WebviewPanel, root: string, cliAvailable: boolean) {
@@ -91,6 +91,11 @@ export class SyncBridgePanel {
     }
 
     public refresh(): void {
+        this._update();
+    }
+
+    public updateRoot(newRoot: string): void {
+        this._root = newRoot;
         this._update();
     }
 
