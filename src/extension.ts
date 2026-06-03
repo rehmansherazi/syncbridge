@@ -21,8 +21,6 @@ function readClaudeUsage(): { tokens: number; costUsd: number } | null {
     const os = require('os');
     const projectsDir = path.join(os.homedir(), '.claude', 'projects');
     if (!fs.existsSync(projectsDir)) return null;
-    console.log('[syncbridge] projectsDir:', projectsDir);
-    console.log('[syncbridge] dirs:', fs.readdirSync(projectsDir));
 
     const dirs = fs.readdirSync(projectsDir);
     let totalTokens = 0;
@@ -59,7 +57,6 @@ function readClaudeUsage(): { tokens: number; costUsd: number } | null {
       }
     }
 
-    console.log('[syncbridge] totalTokens:', totalTokens, 'totalCost:', totalCost);
     if (totalTokens === 0) return null;
     const estimatedCost = totalCost > 0 ? totalCost : (totalTokens * 0.000003);
     return { tokens: totalTokens, costUsd: estimatedCost };

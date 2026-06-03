@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.2] - 2026-06-02
+### Added
+- Claude Code usage display in status bar — shows today's token count and estimated cost
+- Standalone mode — detects Claude Code CLI presence, shows connection status banner in panel
+- Click status bar to open claude.ai usage page
+
+### Fixed
+- Publisher ID corrected to rehmansherazi
+- Repository URL updated
+
 ## [0.0.1] - 2026-05-28
 ### Added
 - VS Code panel with project context, AI response display, and control buttons
