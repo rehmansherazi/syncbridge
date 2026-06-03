@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.5] - 2026-06-03
+### Fixed
+- Panel now updates immediately when active project changed via Ctrl+Shift+A (no reload needed)
+- setupProject hook now also captures Bash commands in claude-state.md (not just file writes)
+
 ## [0.0.4] - 2026-06-03
 ### Improved
 - Panel file labels renamed to be more descriptive
