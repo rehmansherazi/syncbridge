@@ -77,6 +77,7 @@ export class SyncBridgePanel {
     public static createOrShow(root: string, cliAvailable: boolean): void {
         if (SyncBridgePanel.currentPanel) {
             SyncBridgePanel.currentPanel._panel.reveal();
+            SyncBridgePanel.currentPanel.updateRoot(root);
             return;
         }
 

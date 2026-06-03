@@ -170,8 +170,9 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
-        if (!root) { vscode.window.showWarningMessage('Syncbridge: no active project set.'); return; }
-        SyncBridgePanel.createOrShow(root, cliAvailable);
+        const latestRoot = context.globalState.get<string>('syncbridge.root') || root;
+        if (!latestRoot) { vscode.window.showWarningMessage('Syncbridge: no active project set.'); return; }
+        SyncBridgePanel.createOrShow(latestRoot, cliAvailable);
     });
     watcher.onDidChange(() => SyncBridgePanel.currentPanel?.refresh());
 

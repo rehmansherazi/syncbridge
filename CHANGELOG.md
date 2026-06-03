@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.6] - 2026-06-03
+### Fixed
+- Panel now reads correct active project on open after Ctrl+Shift+A when panel was closed
+- Panel root syncs immediately when reopening an already-open panel after project switch
+
 ## [0.0.5] - 2026-06-03
 ### Fixed
 - Panel now updates immediately when active project changed via Ctrl+Shift+A (no reload needed)
