@@ -6,6 +6,7 @@ function showCopiedBadge() {
     setTimeout(() => { status.textContent = prev; }, 2000);
     return;
   }
+  if (!document.getElementById('syncbridge-bot')) return;
   const toast = document.createElement('div');
   toast.textContent = '✓ Syncbridge: Auto-copied response';
   toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#1D9E75;color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;font-family:sans-serif;z-index:999999;box-shadow:0 2px 8px rgba(0,0,0,0.3)';
@@ -33,6 +34,10 @@ function watchForResponseComplete() {
   }
 
   function tick() {
+    if (!document.getElementById('syncbridge-bot')) {
+      stop();
+      return;
+    }
     const current = getLastResponse();
 
     if (!current) {
