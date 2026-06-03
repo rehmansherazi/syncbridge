@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.7] - 2026-06-03
+### Fixed
+- File watcher now recreates when active project changes via Ctrl+Shift+A
+- Live claude-state.md updates now work correctly after switching projects
+
 ## [0.0.6] - 2026-06-03
 ### Fixed
 - Panel now reads correct active project on open after Ctrl+Shift+A when panel was closed

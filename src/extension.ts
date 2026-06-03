@@ -157,24 +157,40 @@ export function activate(context: vscode.ExtensionContext) {
     const usageInterval = setInterval(updateStatusBar, 30000);
     context.subscriptions.push({ dispose: () => clearInterval(usageInterval) });
 
-    const stateFile = path.join(root, 'claude-state.md');
-    const watcher = vscode.workspace.createFileSystemWatcher(stateFile);
+    let watcher = vscode.workspace.createFileSystemWatcher(
+        path.join(root, 'claude-state.md')
+    );
 
-    watcher.onDidChange(() => {
-        const content = fs.readFileSync(stateFile, 'utf8');
+    function onStateChange() {
+        const stateFile = path.join(root!, 'claude-state.md');
+        const content = fs.existsSync(stateFile)
+            ? fs.readFileSync(stateFile, 'utf8')
+            : '';
         const lines = content.split('\n').filter((l: string) => l.trim() && !l.startsWith('#') && !l.startsWith('<!--'));
         const last = lines[lines.length - 1] ?? 'idle';
         statusBar.text = `$(sync) ${last.slice(0, 40)}`;
         statusBar.tooltip = content;
         updateStatusBar();
-    });
+        SyncBridgePanel.currentPanel?.refresh();
+    }
+
+    function recreateWatcher(newRoot: string) {
+        watcher.dispose();
+        watcher = vscode.workspace.createFileSystemWatcher(
+            path.join(newRoot, 'claude-state.md')
+        );
+        watcher.onDidChange(onStateChange);
+        watcher.onDidCreate(onStateChange);
+    }
+
+    watcher.onDidChange(onStateChange);
+    watcher.onDidCreate(onStateChange);
 
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
         const latestRoot = context.globalState.get<string>('syncbridge.root') || root;
         if (!latestRoot) { vscode.window.showWarningMessage('Syncbridge: no active project set.'); return; }
         SyncBridgePanel.createOrShow(latestRoot, cliAvailable);
     });
-    watcher.onDidChange(() => SyncBridgePanel.currentPanel?.refresh());
 
     const sendToCLI = vscode.commands.registerCommand('syncbridge.sendToCLI', async () => {
         const root = getWorkspaceRoot(context);
@@ -218,6 +234,7 @@ export function activate(context: vscode.ExtensionContext) {
         root = picked.folder.uri.fsPath;
         context.globalState.update('syncbridge.root', root);
         SyncBridgePanel.currentPanel?.updateRoot(root);
+        recreateWatcher(root);
     });
 
     const setupProject = vscode.commands.registerCommand('syncbridge.setupProject', async () => {
