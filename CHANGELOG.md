@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.3] - 2026-06-02
+### Fixed
+- Removed noise files from vsix package (chrome extension zip, mcp-server, .github workflows)
+- Package size reduced from 37 KB to 21 KB
+
 ## [0.0.2] - 2026-06-02
 ### Added
 - Claude Code usage display in status bar — shows today's token count and estimated cost

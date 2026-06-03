@@ -25,3 +25,6 @@ hook-test.txt
 hook-test2.txt
 vsc-extension-quickstart.md
 out/test/
+syncbridge-chrome-extension.zip
+.github/
+mcp-server/
