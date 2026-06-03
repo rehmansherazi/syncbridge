@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.4] - 2026-06-03
+### Improved
+- Panel file labels renamed to be more descriptive
+  (AI Instructions, CLI State, Context instead of cryptic arrows)
+
 ## [0.0.3] - 2026-06-02
 ### Fixed
 - Removed noise files from vsix package (chrome extension zip, mcp-server, .github workflows)

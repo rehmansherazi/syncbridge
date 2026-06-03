@@ -136,15 +136,15 @@ export class SyncBridgePanel {
     <span>📁 ${path.basename(this._root)}</span>
   </div>
   ${cliBanner}
-  <h3>claude-ai.md → CLI</h3>
+  <h3>AI Instructions (claude-ai.md)</h3>
   <pre>${ai}</pre>
   <button onclick="copy('ai')">Copy</button>
 
-  <h3>claude-state.md ← CLI</h3>
+  <h3>CLI State (claude-state.md)</h3>
   <pre>${state}</pre>
   <button onclick="copy('state')">Copy</button>
 
-  <h3>claude-context.md shared</h3>
+  <h3>Context (claude-context.md)</h3>
   <pre>${ctx}</pre>
   <button onclick="copy('ctx')">Copy</button>
 
