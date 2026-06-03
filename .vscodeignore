@@ -7,8 +7,7 @@ out/maps/
 tsconfig.json
 .eslintrc.json
 *.test.js
-hook-path-test.txt
-hook-path-test2.txt
+*.txt
 SYNCBRIDGE_CONVENTIONS.md
 ROADMAP.md
 claude-context.md
@@ -19,10 +18,6 @@ chrome-extension/
 claude-ai.md
 claude-state.md
 eslint.config.mjs
-final-test.txt
-hello-from-ai.txt
-hook-test.txt
-hook-test2.txt
 vsc-extension-quickstart.md
 out/test/
 syncbridge-chrome-extension.zip
