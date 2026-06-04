@@ -64,3 +64,38 @@ Check before assuming anything needs to be created:
 Claude Code CLI is a coding agent — not a shell runner.
 Never ask it to create GitHub repos, push to remotes, or run system-level commands.
 Always verify what already exists before instructing creation of anything.
+
+## Model strategy
+Default: Sonnet. Use /model opusplan only for complex 
+architecture decisions or large cross-cutting refactors.
+
+## SEP Quality Gate Policy
+
+Every SEP implementation must include verification before committing.
+Claude Code CLI must run all checks and report results before git commit.
+
+### Required checks for every SEP:
+
+1. Compile — npm run compile must produce zero errors and zero warnings
+2. Smoke tests — verify the new feature works end-to-end
+3. Regression tests — verify existing features still work
+4. Edge cases — handle empty/missing/invalid states gracefully
+5. Self-review — read implemented code and flag anything suspicious
+
+### Commit only when:
+- All compile checks pass
+- All smoke tests pass
+- All regression tests pass
+- Edge cases handled
+- No TODOs or placeholders left in code
+
+### Report format before every commit:
+| Check | Result | Notes |
+|-------|--------|-------|
+| Compile | ✓/✗ | |
+| Smoke tests | ✓/✗ | |
+| Regression | ✓/✗ | |
+| Edge cases | ✓/✗ | |
+| Self-review | ✓/✗ | |
+
+If any check fails — fix first, then rerun all checks before committing.
