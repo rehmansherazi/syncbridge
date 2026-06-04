@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { SyncBridgePanel } from './panel';
+import { SyncBridgePanel, CliConfig } from './panel';
 
 function isClaudeCliInstalled(): boolean {
   try {
@@ -103,6 +103,58 @@ function initControlFiles(root: string): void {
     }
 }
 
+function getCliConfig(): CliConfig {
+    const config = vscode.workspace.getConfiguration('syncbridge');
+    const cli = config.get<string>('activeCli', 'claudecode');
+
+    const configs: Record<string, CliConfig> = {
+        claudecode: {
+            instructionsFile: 'claude-ai.md',
+            stateFile: 'claude-state.md',
+            contextFile: 'claude-context.md',
+            displayName: 'Claude Code',
+            hasAutoSync: true
+        },
+        cursor: {
+            instructionsFile: 'cursor-ai.md',
+            stateFile: 'cursor-state.md',
+            contextFile: 'cursor-context.md',
+            displayName: 'Cursor',
+            hasAutoSync: false
+        },
+        copilot: {
+            instructionsFile: 'copilot-ai.md',
+            stateFile: 'copilot-state.md',
+            contextFile: 'copilot-context.md',
+            displayName: 'Copilot',
+            hasAutoSync: false
+        },
+        windsurf: {
+            instructionsFile: 'windsurf-ai.md',
+            stateFile: 'windsurf-state.md',
+            contextFile: 'windsurf-context.md',
+            displayName: 'Windsurf',
+            hasAutoSync: false
+        },
+        aider: {
+            instructionsFile: 'aider-ai.md',
+            stateFile: 'aider-state.md',
+            contextFile: 'aider-context.md',
+            displayName: 'Aider',
+            hasAutoSync: false
+        },
+        custom: {
+            instructionsFile: config.get<string>('customInstructionsFile', 'ai-instructions.md'),
+            stateFile: config.get<string>('customStateFile', 'ai-state.md'),
+            contextFile: config.get<string>('customContextFile', 'ai-context.md'),
+            displayName: 'Custom',
+            hasAutoSync: false
+        }
+    };
+
+    return configs[cli] || configs['claudecode'];
+}
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('activate() called');
 
@@ -114,6 +166,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     initControlFiles(root);
+    let cliConfig = getCliConfig();
 
     const cliAvailable = isClaudeCliInstalled();
     context.globalState.update('syncbridge.cliAvailable', cliAvailable);
@@ -158,11 +211,11 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push({ dispose: () => clearInterval(usageInterval) });
 
     let watcher = vscode.workspace.createFileSystemWatcher(
-        path.join(root, 'claude-state.md')
+        path.join(root, cliConfig.stateFile)
     );
 
     function onStateChange() {
-        const stateFile = path.join(root!, 'claude-state.md');
+        const stateFile = path.join(root!, cliConfig.stateFile);
         const content = fs.existsSync(stateFile)
             ? fs.readFileSync(stateFile, 'utf8')
             : '';
@@ -174,10 +227,10 @@ export function activate(context: vscode.ExtensionContext) {
         SyncBridgePanel.currentPanel?.refresh();
     }
 
-    function recreateWatcher(newRoot: string) {
+    function recreateWatcher(newRoot: string, config: CliConfig) {
         watcher.dispose();
         watcher = vscode.workspace.createFileSystemWatcher(
-            path.join(newRoot, 'claude-state.md')
+            path.join(newRoot, config.stateFile)
         );
         watcher.onDidChange(onStateChange);
         watcher.onDidCreate(onStateChange);
@@ -189,7 +242,7 @@ export function activate(context: vscode.ExtensionContext) {
     const openPanel = vscode.commands.registerCommand('syncbridge.openPanel', () => {
         const latestRoot = context.globalState.get<string>('syncbridge.root') || root;
         if (!latestRoot) { vscode.window.showWarningMessage('Syncbridge: no active project set.'); return; }
-        SyncBridgePanel.createOrShow(latestRoot, cliAvailable);
+        SyncBridgePanel.createOrShow(latestRoot, cliAvailable, cliConfig);
     });
 
     const sendToCLI = vscode.commands.registerCommand('syncbridge.sendToCLI', async () => {
@@ -203,12 +256,12 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showWarningMessage('Syncbridge: clipboard is empty.');
             return;
         }
-        const filepath = path.join(root, 'claude-ai.md');
+        const filepath = path.join(root, cliConfig.instructionsFile);
         fs.writeFileSync(filepath, content, 'utf8');
-        vscode.window.showInformationMessage(`Syncbridge: claude-ai.md updated in ${path.basename(root)}`);
+        vscode.window.showInformationMessage(`Syncbridge: ${cliConfig.instructionsFile} updated in ${path.basename(root)}`);
         if (!isClaudeCliInstalled()) {
             vscode.window.showInformationMessage(
-                'Claude Code CLI not detected. claude-ai.md written — use it manually or install Claude Code CLI for auto-sync.'
+                `Claude Code CLI not detected. ${cliConfig.instructionsFile} written — use it manually or install Claude Code CLI for auto-sync.`
             );
         }
         SyncBridgePanel.currentPanel?.refresh();
@@ -234,7 +287,7 @@ export function activate(context: vscode.ExtensionContext) {
         root = picked.folder.uri.fsPath;
         context.globalState.update('syncbridge.root', root);
         SyncBridgePanel.currentPanel?.updateRoot(root);
-        recreateWatcher(root);
+        recreateWatcher(root, cliConfig);
     });
 
     const setupProject = vscode.commands.registerCommand('syncbridge.setupProject', async () => {
@@ -294,6 +347,19 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
       vscode.commands.registerCommand('syncbridge.openUsage', () => {
         vscode.env.openExternal(vscode.Uri.parse('https://claude.ai/settings/usage'));
+      })
+    );
+
+    context.subscriptions.push(
+      vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration('syncbridge.activeCli') ||
+            e.affectsConfiguration('syncbridge.customInstructionsFile') ||
+            e.affectsConfiguration('syncbridge.customStateFile') ||
+            e.affectsConfiguration('syncbridge.customContextFile')) {
+          cliConfig = getCliConfig();
+          recreateWatcher(root!, cliConfig);
+          SyncBridgePanel.currentPanel?.updateCliConfig(cliConfig);
+        }
       })
     );
 

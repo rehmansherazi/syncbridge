@@ -2,22 +2,32 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
+export interface CliConfig {
+  instructionsFile: string;
+  stateFile: string;
+  contextFile: string;
+  displayName: string;
+  hasAutoSync: boolean;
+}
+
 export class SyncBridgePanel {
     public static currentPanel: SyncBridgePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
     private _root: string;
     private _cliAvailable: boolean;
+    private _cliConfig: CliConfig;
 
-    private constructor(panel: vscode.WebviewPanel, root: string, cliAvailable: boolean) {
+    private constructor(panel: vscode.WebviewPanel, root: string, cliAvailable: boolean, cliConfig: CliConfig) {
         this._panel = panel;
         this._root = root;
         this._cliAvailable = cliAvailable;
+        this._cliConfig = cliConfig;
         this._update();
 
         this._panel.webview.onDidReceiveMessage((msg) => {
             if (msg.command === 'regen') {
-                const ai    = this._read('claude-ai.md');
-                const state = this._read('claude-state.md');
+                const ai    = this._read(this._cliConfig.instructionsFile);
+                const state = this._read(this._cliConfig.stateFile);
 
                 const stateLines = state
                     .split('\n')
@@ -27,7 +37,7 @@ export class SyncBridgePanel {
 
                 const conventions = this._read('SYNCBRIDGE_CONVENTIONS.md');
                 const context = [
-                    '# claude-context.md',
+                    `# ${this._cliConfig.contextFile}`,
                     '## Last instructions sent to CLI',
                     ai.split('\n').filter(l => l.trim() && !l.startsWith('#') && !l.startsWith('<!--')).join('\n').trim() || '(none)',
                     '## Last 10 CLI actions',
@@ -39,13 +49,13 @@ export class SyncBridgePanel {
                     conventions.trim() || '(none)',
                 ].join('\n\n');
 
-                const fp = path.join(this._root, 'claude-context.md');
+                const fp = path.join(this._root, this._cliConfig.contextFile);
                 fs.writeFileSync(fp, context, 'utf8');
-                vscode.window.showInformationMessage('Syncbridge: claude-context.md regenerated.');
+                vscode.window.showInformationMessage(`Syncbridge: ${this._cliConfig.contextFile} regenerated.`);
                 this._update();
             }
             if (msg.command === 'clear') {
-                const files = ['claude-ai.md', 'claude-state.md'];
+                const files = [this._cliConfig.instructionsFile, this._cliConfig.stateFile];
                 for (const f of files) {
                     const fp = path.join(this._root, f);
                     fs.writeFileSync(fp, `# ${f}\n<!-- reset -->\n`, 'utf8');
@@ -55,9 +65,9 @@ export class SyncBridgePanel {
             }
             if (msg.command === 'copy') {
                 const fileMap: Record<string, string> = {
-                    'ai':    'claude-ai.md',
-                    'state': 'claude-state.md',
-                    'ctx':   'claude-context.md'
+                    'ai':    this._cliConfig.instructionsFile,
+                    'state': this._cliConfig.stateFile,
+                    'ctx':   this._cliConfig.contextFile
                 };
                 const filename = fileMap[msg.file];
                 if (filename) {
@@ -74,7 +84,7 @@ export class SyncBridgePanel {
         });
     }
 
-    public static createOrShow(root: string, cliAvailable: boolean): void {
+    public static createOrShow(root: string, cliAvailable: boolean, cliConfig: CliConfig): void {
         if (SyncBridgePanel.currentPanel) {
             SyncBridgePanel.currentPanel._panel.reveal();
             SyncBridgePanel.currentPanel.updateRoot(root);
@@ -88,7 +98,7 @@ export class SyncBridgePanel {
             { enableScripts: true }
         );
 
-        SyncBridgePanel.currentPanel = new SyncBridgePanel(panel, root, cliAvailable);
+        SyncBridgePanel.currentPanel = new SyncBridgePanel(panel, root, cliAvailable, cliConfig);
     }
 
     public refresh(): void {
@@ -100,18 +110,26 @@ export class SyncBridgePanel {
         this._update();
     }
 
+    public updateCliConfig(config: CliConfig): void {
+        this._cliConfig = config;
+        this._update();
+    }
+
     private _read(filename: string): string {
         const fp = path.join(this._root, filename);
         return fs.existsSync(fp) ? fs.readFileSync(fp, 'utf8') : '(empty)';
     }
 
     private _update(): void {
-        const ai    = this._read('claude-ai.md');
-        const state = this._read('claude-state.md');
-        const ctx   = this._read('claude-context.md');
+        const ai    = this._read(this._cliConfig.instructionsFile);
+        const state = this._read(this._cliConfig.stateFile);
+        const ctx   = this._read(this._cliConfig.contextFile);
         const cliBanner = this._cliAvailable
             ? `<div class="banner banner-ok">● Claude Code CLI connected — full sync active</div>`
             : `<div class="banner banner-warn">⚠ Claude Code CLI not detected — clipboard bridge active, auto-sync disabled</div>`;
+        const syncBanner = this._cliConfig.hasAutoSync
+            ? ''
+            : `<div class="banner banner-warn">⚠ ${this._cliConfig.displayName} — auto-sync not available. Edit state file manually.</div>`;
 
         this._panel.webview.html = `<!DOCTYPE html>
 <html>
@@ -142,15 +160,16 @@ export class SyncBridgePanel {
     <span>📁 ${path.basename(this._root)}</span>
   </div>
   ${cliBanner}
-  <h3>AI Instructions (claude-ai.md)</h3>
+  ${syncBanner}
+  <h3>AI Instructions (${this._cliConfig.instructionsFile.toUpperCase()})</h3>
   <pre>${ai}</pre>
   <button onclick="copy('ai')">Copy</button>
 
-  <h3>CLI State (claude-state.md)</h3>
+  <h3>CLI State (${this._cliConfig.stateFile.toUpperCase()})</h3>
   <pre>${state}</pre>
   <button onclick="copy('state')">Copy</button>
 
-  <h3>Context (claude-context.md)</h3>
+  <h3>Context (${this._cliConfig.contextFile.toUpperCase()})</h3>
   <pre>${ctx}</pre>
   <button onclick="copy('ctx')">Copy</button>
 
@@ -169,7 +188,7 @@ export class SyncBridgePanel {
       vscode.postMessage({ command: 'regen' });
     }
     function clearFiles() {
-      if (confirm('Reset claude-ai.md and claude-state.md to empty? This cannot be undone.')) {
+      if (confirm('Reset ${this._cliConfig.instructionsFile} and ${this._cliConfig.stateFile} to empty? This cannot be undone.')) {
         vscode.postMessage({ command: 'clear' });
       }
     }

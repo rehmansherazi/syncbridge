@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.9] - 2026-06-04
+### Added
+- `syncbridge.activeCli` setting — choose Claude Code, Cursor, Copilot, Windsurf, Aider, or Custom
+- Control file names and panel labels adapt automatically to the selected CLI
+- Custom file name settings for full control when `activeCli` is set to `custom`
+- Amber warning banner in panel for CLIs without auto-sync support
+- File watcher and panel update live when `activeCli` setting changes (no reload needed)
+
 ## [0.0.8] - 2026-06-03
 ### Fixed
 - Bash hook command truncation increased from 50 to 120 characters

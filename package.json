@@ -3,7 +3,7 @@
   "displayName": "Syncbridge",
   "description": "AI chat to CLI sync bridge",
   "publisher": "rehmansherazi",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/rehmansherazi/syncbridge"
@@ -47,6 +47,40 @@
         "title": "Syncbridge: Open Claude Usage"
       }
     ],
+    "configuration": {
+      "title": "Syncbridge",
+      "properties": {
+        "syncbridge.activeCli": {
+          "type": "string",
+          "default": "claudecode",
+          "enum": ["claudecode", "cursor", "copilot", "windsurf", "aider", "custom"],
+          "enumDescriptions": [
+            "Claude Code CLI (default) — full auto-sync support",
+            "Cursor — manual state sync only",
+            "Microsoft Copilot CLI — manual state sync only",
+            "Windsurf — manual state sync only",
+            "Aider — manual state sync only",
+            "Custom — use custom file names"
+          ],
+          "description": "The AI coding CLI you are using. Controls control file names and panel labels."
+        },
+        "syncbridge.customInstructionsFile": {
+          "type": "string",
+          "default": "ai-instructions.md",
+          "description": "Custom instructions file name (only used when activeCli is 'custom')"
+        },
+        "syncbridge.customStateFile": {
+          "type": "string",
+          "default": "ai-state.md",
+          "description": "Custom state file name (only used when activeCli is 'custom')"
+        },
+        "syncbridge.customContextFile": {
+          "type": "string",
+          "default": "ai-context.md",
+          "description": "Custom context file name (only used when activeCli is 'custom')"
+        }
+      }
+    },
     "keybindings": [
       {
         "command": "syncbridge.openPanel",
