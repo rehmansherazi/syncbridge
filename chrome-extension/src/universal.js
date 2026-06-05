@@ -19,37 +19,35 @@ const POLL_INTERVAL_MS = 800;
 const START_DELAY_MS = 2000;
 const MAX_NULL_STREAK = 30;
 
-function watchForResponseComplete() {
+let _watcherIntervalId = null;
+
+function stopWatcher() {
+  if (_watcherIntervalId) {
+    clearInterval(_watcherIntervalId);
+    _watcherIntervalId = null;
+  }
+}
+
+function startWatcher() {
+  stopWatcher();
   let last = null;
   let stableCount = 0;
   let nullStreak = 0;
-  let intervalId = null;
-
-  function stop() {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-      window._syncbridgeWatcher = null;
-    }
-  }
 
   function tick() {
     if (!document.getElementById('syncbridge-bot')) {
-      stop();
+      stopWatcher();
       return;
     }
     const current = getLastResponse();
-
     if (!current) {
       nullStreak++;
-      if (nullStreak >= MAX_NULL_STREAK) stop();
+      if (nullStreak >= MAX_NULL_STREAK) stopWatcher();
       stableCount = 0;
       last = null;
       return;
     }
-
     nullStreak = 0;
-
     if (current === last) {
       stableCount++;
       if (stableCount >= STABLE_THRESHOLD) {
@@ -77,18 +75,17 @@ function watchForResponseComplete() {
     }
   }
 
-  stop();
-  intervalId = setInterval(tick, POLL_INTERVAL_MS);
-  window._syncbridgeWatcher = intervalId;
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stop();
-    else {
-      setTimeout(() => {
-        if (!window._syncbridgeWatcher) watchForResponseComplete();
-      }, START_DELAY_MS);
-    }
-  });
+  _watcherIntervalId = setInterval(tick, POLL_INTERVAL_MS);
 }
 
-setTimeout(watchForResponseComplete, START_DELAY_MS);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopWatcher();
+  } else {
+    setTimeout(() => {
+      if (!_watcherIntervalId) startWatcher();
+    }, START_DELAY_MS);
+  }
+});
+
+setTimeout(startWatcher, START_DELAY_MS);
