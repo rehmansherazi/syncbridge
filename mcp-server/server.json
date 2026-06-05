@@ -1,8 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-16/server.schema.json",
   "name": "io.github.rehmansherazi/syncbridge-mcp",
-  "description": "Bridges AI chat interfaces (Claude.ai, ChatGPT, Gemini, Perplexity, Grok, Mistral, Copilot) with Claude Code CLI via shared markdown control files. Provides tools to update state, read instructions, get context, and clear state.",
-  "status": "active",
+  "description": "Bridges AI chat interfaces with Claude Code CLI via shared markdown control files.",
   "repository": {
     "url": "https://github.com/rehmansherazi/syncbridge",
     "source": "github"
