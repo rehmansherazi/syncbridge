@@ -69,7 +69,7 @@ function watchForResponseComplete() {
           });
         } catch (e) {}
         stableCount = 0;
-        last = null;
+        last = current;
       }
     } else {
       stableCount = 0;
