@@ -29,7 +29,6 @@ function stopWatcher() {
 
 function startWatcher() {
   stopWatcher();
-  _lastCopied = null;
   let last = null;
   let stableCount = 0;
 
@@ -102,7 +101,7 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopWatcher();
   } else {
-    if (!_watcherIntervalId) {
+    if (!_watcherIntervalId && !_lastCopied) {
       setTimeout(startWatcher, START_DELAY_MS);
     }
   }
