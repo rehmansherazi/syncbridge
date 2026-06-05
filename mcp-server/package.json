@@ -10,5 +10,6 @@
     "start": "node index.js"
   },
   "keywords": ["mcp", "syncbridge", "claude", "ai", "cli"],
-  "license": "MIT"
+  "license": "MIT",
+  "mcpName": "io.github.rehmansherazi/syncbridge-mcp"
 }
