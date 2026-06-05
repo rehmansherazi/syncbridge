@@ -17,9 +17,9 @@ function showCopiedBadge() {
 const STABLE_THRESHOLD = 3;
 const POLL_INTERVAL_MS = 800;
 const START_DELAY_MS = 2000;
-const MAX_NULL_STREAK = 30;
 
 let _watcherIntervalId = null;
+let _lastCopied = null;
 
 function stopWatcher() {
   if (_watcherIntervalId) {
@@ -30,9 +30,9 @@ function stopWatcher() {
 
 function startWatcher() {
   stopWatcher();
+  _lastCopied = null;
   let last = null;
   let stableCount = 0;
-  let nullStreak = 0;
 
   function tick() {
     if (!document.getElementById('syncbridge-bot')) {
@@ -41,16 +41,18 @@ function startWatcher() {
     }
     const current = getLastResponse();
     if (!current) {
-      nullStreak++;
-      if (nullStreak >= MAX_NULL_STREAK) stopWatcher();
       stableCount = 0;
       last = null;
       return;
     }
-    nullStreak = 0;
+    if (current === _lastCopied) {
+      return;
+    }
     if (current === last) {
       stableCount++;
       if (stableCount >= STABLE_THRESHOLD) {
+        _lastCopied = current;
+        stopWatcher();
         try {
           navigator.clipboard.writeText(current).then(() => {
             showCopiedBadge();
@@ -66,8 +68,6 @@ function startWatcher() {
             showCopiedBadge();
           });
         } catch (e) {}
-        stableCount = 0;
-        last = current;
       }
     } else {
       stableCount = 0;
@@ -78,14 +78,35 @@ function startWatcher() {
   _watcherIntervalId = setInterval(tick, POLL_INTERVAL_MS);
 }
 
+function watchForNewMessage() {
+  const adapter = getAdapter();
+  if (!adapter) return;
+  let lastInput = '';
+  setInterval(() => {
+    const el = findElement(adapter.inputSelectors);
+    if (!el) return;
+    const current = el.textContent || el.value || '';
+    if (current.trim() && current !== lastInput) {
+      lastInput = current;
+    }
+    if (!current.trim() && lastInput.trim()) {
+      lastInput = '';
+      setTimeout(startWatcher, START_DELAY_MS);
+    }
+  }, 1000);
+}
+
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopWatcher();
   } else {
-    setTimeout(() => {
-      if (!_watcherIntervalId) startWatcher();
-    }, START_DELAY_MS);
+    if (!_watcherIntervalId) {
+      setTimeout(startWatcher, START_DELAY_MS);
+    }
   }
 });
 
-setTimeout(startWatcher, START_DELAY_MS);
+setTimeout(() => {
+  startWatcher();
+  watchForNewMessage();
+}, START_DELAY_MS);
