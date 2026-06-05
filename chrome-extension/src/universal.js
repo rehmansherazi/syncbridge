@@ -77,16 +77,23 @@ function watchForNewMessage() {
   const adapter = getAdapter();
   if (!adapter) return;
   let lastInput = '';
+  let lastCopyTime = 0;
+
   setInterval(() => {
     const el = findElement(adapter.inputSelectors);
     if (!el) return;
-    const current = el.textContent || el.value || '';
-    if (current.trim() && current !== lastInput) {
+    const current = (el.textContent || el.value || '').trim();
+    if (current && current !== lastInput) {
       lastInput = current;
     }
-    if (!current.trim() && lastInput.trim()) {
+    if (!current && lastInput) {
       lastInput = '';
-      setTimeout(startWatcher, START_DELAY_MS);
+      const now = Date.now();
+      if (now - lastCopyTime > 5000) {
+        lastCopyTime = now;
+        _lastCopied = null;
+        setTimeout(startWatcher, START_DELAY_MS);
+      }
     }
   }, 1000);
 }
