@@ -99,3 +99,14 @@ Claude Code CLI must run all checks and report results before git commit.
 | Self-review | ✓/✗ | |
 
 If any check fails — fix first, then rerun all checks before committing.
+
+## Doc Update Principle
+
+Every SEP completion must include before final commit:
+- README.md updated with new features or changes
+- CHANGELOG.md entry added
+- ROADMAP.md status updated to reflect completion
+- Inline code comments added or updated for all changed functions
+
+No SEP is complete until all four doc files are updated.
+This is part of the SEP Quality Gate — same weight as compile and smoke tests.
