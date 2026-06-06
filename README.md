@@ -13,7 +13,7 @@ Search for "Syncbridge" in the Extensions panel and click Install.
 
 **From .vsix file:**
 ```
-code --install-extension syncbridge-0.0.1.vsix
+code --install-extension syncbridge-0.0.9.vsix
 ```
 
 ## MCP server (Claude Code CLI integration)
@@ -36,7 +36,7 @@ Available tools:
 - CLI sync requires Claude Code CLI to be running in the active terminal
 
 ## What it does
-Closes the gap between AI chat (claude.ai, ChatGPT, Gemini, Perplexity, Mistral, Grok, Copilot) and coding CLI tools (Claude Code, Copilot, Continue) by syncing instructions and state via shared markdown files.
+Closes the gap between AI chat (Claude.ai, ChatGPT, Gemini, Perplexity, Grok, Mistral, Copilot) and coding CLI tools (Claude Code, Cursor, Copilot, Windsurf, Aider) by syncing instructions and state via shared markdown files.
 
 ## Architecture
 - VS Code extension (this) — sidebar panel, file watcher, status bar, clipboard bridge
@@ -121,19 +121,19 @@ When the workspace has multiple root folders, the extension resolves the active 
 
 All control files are read from and written to that resolved root. Switching active editor or terminal automatically shifts the target folder on next command invocation.
 
-## Phase 2 (in progress)
-Chrome extension with:
-- Universal layer: floating bot UI, clipboard bridge, works on any AI site
-- Site adapters: per-site input/output selectors for claude.ai, ChatGPT, Gemini, Perplexity
+## VS Code Extension
+v0.0.9 — available on the VS Code Marketplace. Search "Syncbridge" or install via `.vsix`.
 
 ## Chrome Extension
-Located in `chrome-extension/`. Load unpacked from `chrome://extensions` in developer mode.
+v0.3.0 (pending Chrome Web Store review). Located in `chrome-extension/`. Load unpacked from `chrome://extensions` in developer mode.
 
 Features:
 - Slim right-edge floating bot — hover to expand, click tab to pin open
 - Draggable vertically along the right edge
 - Two-way sync buttons on all supported AI sites
 - Site adapters with per-site CSS selectors for reading output and injecting input
+- Auto-copy AI response to clipboard on completion (one copy per response, no loop)
+- `activeCli` setting — adapts control file names per active CLI (Claude Code, Cursor, etc.)
 
 Supported sites:
 - claude.ai
