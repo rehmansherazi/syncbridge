@@ -2,6 +2,23 @@
 
 AI chat to CLI sync bridge for VS Code.
 
+## Screenshots
+
+### The Problem — Manual copy-paste between AI and CLI
+![The Problem](screenshots/00.png)
+
+### The Solution — Syncbridge auto-copies AI responses
+![The Solution](screenshots/01.png)
+
+### Two Modes — Floating widget and hidden mode with toast
+![Two Modes](screenshots/02.png)
+
+### Hidden Mode — Green toast confirms auto-copy in background
+![Hidden Mode](screenshots/03.png)
+
+### Live CLI State — VS Code panel updates in real time
+![Live CLI State](screenshots/04.png)
+
 ## Requirements
 - VS Code 1.100.0 or higher
 - Claude Code CLI installed and accessible in terminal
