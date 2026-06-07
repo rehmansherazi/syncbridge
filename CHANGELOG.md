@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.0] - 2026-06-05
+### Added
+- 5 annotated screenshots added to README
+- Screenshots show full workflow: problem, solution, two modes, live CLI state
+
 ## [0.0.9] - 2026-06-04
 ### Added
 - `syncbridge.activeCli` setting — choose Claude Code, Cursor, Copilot, Windsurf, Aider, or Custom
