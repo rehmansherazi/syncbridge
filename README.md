@@ -1,6 +1,55 @@
 # Syncbridge
 
-AI chat to CLI sync bridge for VS Code.
+Sync AI chat interfaces with coding CLIs — bidirectional, automatic, zero copy-paste.
+
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-v0.1.0-blue)](https://marketplace.visualstudio.com/items?itemName=rehmansherazi.syncbridge)
+[![Chrome Extension](https://img.shields.io/badge/Chrome-v0.3.0-green)](https://github.com/rehmansherazi/syncbridge)
+[![npm](https://img.shields.io/badge/npm-syncbridge--mcp-red)](https://www.npmjs.com/package/syncbridge-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE.txt)
+
+---
+
+## Quick Start
+
+**Step 1 — Install VS Code extension**
+Search "Syncbridge" in VS Code Extensions panel and click Install.
+Or via command palette: `ext install rehmansherazi.syncbridge`
+
+**Step 2 — Install Chrome extension**
+Load unpacked from `chrome-extension/` folder via `chrome://extensions` (developer mode).
+Chrome Web Store version coming soon.
+
+**Step 3 — Set your active project**
+Press `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`) in VS Code → select your project folder.
+Press `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`) to deploy the file watcher hook.
+Press `Ctrl+Shift+S` (Mac: `Cmd+Shift+S`) to open the Syncbridge panel.
+
+You're ready. Ask your AI something — Syncbridge handles the rest.
+
+---
+
+## What it does
+
+Closes the gap between AI chat and coding CLIs. No more switching windows to copy-paste. No more lost context when chats get long.
+
+**Supported AI chat interfaces (Chrome extension):**
+- Claude.ai
+- ChatGPT
+- Google Gemini
+- Perplexity
+- Grok (x.ai)
+- Mistral
+- Microsoft Copilot
+
+**Supported coding CLIs (VS Code extension):**
+- Claude Code (full auto-sync with hooks)
+- Cursor
+- GitHub Copilot CLI
+- Windsurf
+- Aider
+- Custom (user-defined file names)
+
+---
 
 ## Screenshots
 
@@ -10,195 +59,262 @@ AI chat to CLI sync bridge for VS Code.
 ### The Solution — Syncbridge auto-copies AI responses
 ![The Solution](screenshots/01.png)
 
-### Two Modes — Floating widget and hidden mode with toast
+### Two Modes — Floating widget and hidden mode with toast notification
 ![Two Modes](screenshots/02.png)
 
-### Hidden Mode — Green toast confirms auto-copy in background
+### Hidden Mode — Green toast confirms auto-copy when widget is hidden
 ![Hidden Mode](screenshots/03.png)
 
-### Live CLI State — VS Code panel updates in real time
+### Live CLI State — VS Code panel updates in real time as CLI runs
 ![Live CLI State](screenshots/04.png)
 
-## Requirements
-- VS Code 1.100.0 or higher
-- Claude Code CLI installed and accessible in terminal
-- Node.js v18+
+---
+
+## How it works
+
+**AI → CLI** — Ask your AI something. Chrome extension auto-copies the response when it finishes. Press `Ctrl+Shift+X` (Mac: `Cmd+Shift+X`) in VS Code to write it to your instructions file. Run `/sync` in Claude Code CLI to execute.
+
+**CLI → AI** — Claude Code CLI runs tasks and the hook auto-updates `claude-state.md` after every file write and bash command. The VS Code panel shows these updates live. Copy the state and paste into any AI chat to resume with full context.
+
+**Context migration** — When your chat gets long, click ⟳ Regenerate in the Syncbridge panel. It merges your last instructions and last 10 CLI actions into a structured migration prompt. Paste into a new chat — the AI picks up exactly where you left off.
+
+---
+
+## Architecture
+
+- **VS Code extension** — sidebar panel, file watcher, status bar, clipboard bridge, project hook deployment
+- **Chrome extension** — floating widget UI, site adapters for each AI platform, auto-copy on response complete
+- **MCP server** — optional Claude Code CLI integration via MCP tools
+
+---
 
 ## Installation
-**From VS Code Marketplace:**
-Search for "Syncbridge" in the Extensions panel and click Install.
+
+### VS Code Extension
+
+**From Marketplace:**
+Search "Syncbridge" in the Extensions panel and click Install.
 
 **From .vsix file:**
-```
+```bash
 code --install-extension syncbridge-0.1.0.vsix
 ```
 
-## MCP server (Claude Code CLI integration)
+### Chrome Extension
 
-Connect Syncbridge directly to Claude Code CLI as an MCP tool:
+**Developer mode (available now):**
+1. Download or clone this repo
+2. Go to `chrome://extensions`
+3. Enable Developer mode
+4. Click Load unpacked → select `chrome-extension/` folder
+
+**Chrome Web Store:** Under review — available soon.
+
+### MCP Server (Claude Code CLI)
 
 ```bash
 claude mcp add syncbridge npx syncbridge-mcp
 ```
 
-Available tools:
+Available MCP tools:
 - `update_state` — push CLI state to Syncbridge
 - `read_instructions` — pull latest AI instructions
 - `get_context` — get full merged context
 - `clear_state` — reset state for a new session
 
-## Known Limitations
-- Chrome extension site adapters use fallback selector chains — resilient to minor DOM changes but major site redesigns may still require an update
-- File watcher hook requires manual setup per project via Ctrl+Shift+E
-- CLI sync requires Claude Code CLI to be running in the active terminal
-
-## What it does
-Closes the gap between AI chat (Claude.ai, ChatGPT, Gemini, Perplexity, Grok, Mistral, Copilot) and coding CLI tools (Claude Code, Cursor, Copilot, Windsurf, Aider) by syncing instructions and state via shared markdown files.
-
-## Architecture
-- VS Code extension (this) — sidebar panel, file watcher, status bar, clipboard bridge
-- Chrome extension — floating bot UI, site adapters for each AI
-
-## Flow diagram
-
-![Syncbridge 13-step flow](docs/syncbridge-flow.png)
-
-See the diagram above for the complete 13-step flow from opening VS Code to AI resuming with full context.
-
-## How it works — visual guides
-
-**AI → CLI** — send an AI response to your coding agent
-
-**CLI → AI** — send your CLI state back to any AI chat
-
-**Context migration** — resume any session with zero re-explaining
-
-## VS Code Extension Commands
-- `Syncbridge: Open Panel` — open the sync panel in column two
-- `Syncbridge: Send Clipboard to CLI` — overwrite `claude-ai.md` with current clipboard content
-
-## Panel UI
-Opens in VS Code's second column. Displays the live contents of all three control files with:
-- **Copy button** per file — copies that file's content to clipboard
-- **⟳ Regenerate context.md** button — rebuilds `claude-context.md` from the current contents of `claude-ai.md` and `claude-state.md`, including a resume prompt
-
-The panel auto-refreshes whenever `claude-state.md` changes on disk.
-
-## Status Bar
-A persistent `$(sync) Syncbridge` item appears in the left status bar when the extension activates. When `claude-state.md` changes, the status bar updates to show the last non-blank line of the file (truncated to 40 chars). Hovering shows the full file content as a tooltip.
-
-## File Watcher
-The extension watches `claude-state.md` in the active workspace root. Any write to that file simultaneously updates the status bar and refreshes the panel — no manual reload needed.
-
-## Claude Code CLI Commands
-- `/sync` — read `claude-ai.md` and execute the instructions inside it, then update `claude-state.md` with a `✓`-prefixed summary of every action taken
-
-## Claude Code Hook
-The hook is configured in `.claude/settings.json` and fires automatically after every file write by Claude Code CLI. No manual step needed. It appends a timestamped line to `claude-state.md`:
-
-```
-✓ HH:MM:SS wrote <file_path>
-```
-
-To copy the hook to a new project:
-```bash
-mkdir -p <project>/.claude/commands
-cp .claude/settings.json <project>/.claude/
-cp .claude/commands/sync.md <project>/.claude/commands/
-```
-
-## Control Files
-All three files are created automatically in the workspace root on first activation if they don't exist.
-
-| File | Direction | Purpose |
-|---|---|---|
-| `claude-ai.md` | AI → CLI | Paste instructions from chat here; `/sync` reads and executes them |
-| `claude-state.md` | CLI → AI | Auto-updated by the hook after every file write; copy into chat to resume |
-| `claude-context.md` | Shared | Migration prompt for fresh chat sessions; use "Regenerate" button to rebuild |
-
-## Context Migration (claude-context.md)
-Use this when your chat gets too long or context drifts.
-
-**How it works:**
-1. Click **⟳ Regenerate context.md** in the Syncbridge panel
-2. It merges your last instructions (`claude-ai.md`) + last 10 CLI actions (`claude-state.md`) into a structured migration prompt
-3. Copy `claude-context.md` contents
-4. Paste into a new chat — the AI picks up exactly where you left off
-
-**When to use it:**
-- Chat is getting long and responses are drifting
-- Starting a new day on the same project
-- Switching between projects
-
-## Multi-Folder Workspace Behavior
-When the workspace has multiple root folders, the extension resolves the active root in priority order:
-1. The folder containing the **currently open file** in the editor
-2. The folder whose name appears in the **active terminal's** title
-3. **First folder** in the workspace list as a fallback
-
-All control files are read from and written to that resolved root. Switching active editor or terminal automatically shifts the target folder on next command invocation.
+---
 
 ## VS Code Extension
-v0.0.9 — available on the VS Code Marketplace. Search "Syncbridge" or install via `.vsix`.
+
+### Commands
+| Command | Description |
+|---------|-------------|
+| `Syncbridge: Open Panel` | Open the sync panel in column two |
+| `Syncbridge: Send Clipboard to CLI` | Write clipboard content to instructions file |
+| `Syncbridge: Set Active Project` | Set the active project folder |
+| `Syncbridge: Setup Project` | Deploy file watcher hook to current project |
+
+### Panel UI
+Opens in VS Code's second column. Displays live contents of all three control files with:
+- **Copy** button per file
+- **⟳ Regenerate context.md** — rebuilds migration prompt from current state
+- **⚠ Clear all control files** — resets all three files
+
+The panel auto-refreshes whenever the state file changes on disk.
+
+### Status Bar
+Shows last CLI action in the status bar. Click to open Claude.ai usage page.
+Updates automatically when `claude-state.md` changes — no manual reload needed.
+
+### activeCli Setting
+Syncbridge adapts control file names based on which CLI you use.
+
+Go to VS Code Settings → search "syncbridge" → set **Active CLI**:
+
+| Setting | Instructions file | State file | Context file |
+|---------|------------------|------------|--------------|
+| claudecode (default) | claude-ai.md | claude-state.md | claude-context.md |
+| cursor | cursor-ai.md | cursor-state.md | cursor-context.md |
+| copilot | copilot-ai.md | copilot-state.md | copilot-context.md |
+| windsurf | windsurf-ai.md | windsurf-state.md | windsurf-context.md |
+| aider | aider-ai.md | aider-state.md | aider-context.md |
+| custom | user-defined | user-defined | user-defined |
+
+Non-Claude Code CLIs show an amber banner in the panel — state file must be updated manually for those CLIs.
+
+---
 
 ## Chrome Extension
-v0.3.0 (pending Chrome Web Store review). Located in `chrome-extension/`. Load unpacked from `chrome://extensions` in developer mode.
 
-Features:
-- Slim right-edge floating bot — hover to expand, click tab to pin open
+### Features
+- Slim right-edge floating widget — hover to expand, click tab to pin open
 - Draggable vertically along the right edge
-- Two-way sync buttons on all supported AI sites
-- Site adapters with per-site CSS selectors for reading output and injecting input
-- Auto-copy AI response to clipboard on completion (one copy per response, no loop)
-- `activeCli` setting — adapts control file names per active CLI (Claude Code, Cursor, etc.)
+- X button on hover removes widget from page — runs silently in background
+- Toolbar popup to show/hide floating widget from Chrome extensions bar
+- Auto-copies AI response to clipboard when response finishes (one copy per response)
+- Green toast notification confirms auto-copy — visible even when widget is hidden
+- Site adapters with per-site selectors for reading output and injecting input
 
-Supported sites:
-- claude.ai
-- chatgpt.com
-- gemini.google.com
-- perplexity.ai
-- mistral.ai
-- x.ai (Grok)
-- copilot.microsoft.com (Microsoft Copilot)
+### Supported Sites
+Claude.ai · ChatGPT · Google Gemini · Perplexity · Grok · Mistral · Microsoft Copilot
+
+---
 
 ## Keyboard Shortcuts
 
-### Keyboard Shortcuts — Complete Reference
-| Shortcut | Where | Action |
-|---|---|---|
-| Ctrl+Shift+S | VS Code | Open Syncbridge panel |
-| Ctrl+Shift+X | VS Code | Send clipboard to claude-ai.md |
-| Ctrl+Shift+A | VS Code | Set active project |
-| Ctrl+Shift+E | VS Code | Setup current project (deploys hook + /sync command) |
-| Alt+C | Chrome | Copy AI response to clipboard |
-| Alt+V | Chrome | Inject clipboard into AI input |
+| Shortcut (Windows/Linux) | Shortcut (Mac) | Where | Action |
+|--------------------------|----------------|-------|--------|
+| Ctrl+Shift+S | Cmd+Shift+S | VS Code | Open Syncbridge panel |
+| Ctrl+Shift+X | Cmd+Shift+X | VS Code | Send clipboard to instructions file |
+| Ctrl+Shift+A | Cmd+Shift+A | VS Code | Set active project |
+| Ctrl+Shift+E | Cmd+Shift+E | VS Code | Setup current project (deploy hook) |
+| Alt+C | Option+C | Chrome | Copy AI response to clipboard |
+| Alt+V | Option+V | Chrome | Inject clipboard into AI input |
 
-To change VS Code shortcuts: edit `contributes.keybindings` in `package.json`, recompile and reinstall.
-Users can also remap without touching code via VS Code's built-in Keyboard Shortcuts editor: `Ctrl+K Ctrl+S`.
+**To remap VS Code shortcuts:**
+- Edit `contributes.keybindings` in `package.json`, recompile and reinstall
+- Or use VS Code built-in editor: `Ctrl+K Ctrl+S` (Mac: `Cmd+K Cmd+S`)
 
-To change Chrome shortcuts: edit the `keydown` listener in `chrome-extension/src/bot.js`, then reload the extension in chrome://extensions.
+**To remap Chrome shortcuts:**
+Edit the `keydown` listener in `chrome-extension/src/bot.js` then reload at `chrome://extensions`.
+
+---
+
+## Control Files
+
+All three files are created automatically in the workspace root on first activation.
+File names adapt based on your `activeCli` setting (see above).
+
+| File (claudecode default) | Direction | Purpose |
+|---------------------------|-----------|---------|
+| `claude-ai.md` | AI → CLI | Instructions from chat; `/sync` reads and executes |
+| `claude-state.md` | CLI → AI | Auto-updated by hook after every file write and bash command |
+| `claude-context.md` | Shared | Migration prompt; rebuilt by ⟳ Regenerate button |
+
+---
+
+## Context Migration
+
+Use when your chat gets too long or context drifts.
+
+![Context Migration Flow](docs/syncbridge-flow.png)
+
+**Steps:**
+1. Click **⟳ Regenerate context.md** in the Syncbridge panel
+2. Merges last instructions + last 10 CLI actions into a structured prompt
+3. Copy `claude-context.md` contents
+4. Paste into a new chat — AI resumes exactly where you left off
+
+**When to use:**
+- Chat responses are drifting or losing accuracy
+- Starting a new day on the same project
+- Switching between AI models mid-session
+
+---
+
+## File Watcher Hook
+
+The hook is configured in `.claude/settings.json` and fires automatically after every file write and bash command by Claude Code CLI.
+
+Deploy to a project: Press `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`) in VS Code.
+
+To copy manually to another project:
+```bash
+cp .claude/settings.json <project>/.claude/
+```
+
+Hook captures:
+```
+✓ HH:MM:SS wrote <file_path>
+✓ HH:MM:SS ran: <command>
+```
+
+---
+
+## Multi-Folder Workspace
+
+When workspace has multiple root folders, active root resolves in this order:
+1. Folder containing the currently open file
+2. Folder set via `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`)
+3. First folder in workspace list as fallback
+
+---
+
+## Roadmap
+
+<!-- PLACEHOLDER: SEP-24 and beyond — future improvements planned -->
+- [ ] Auto-detect installed CLIs on first run
+- [ ] Chrome Web Store public release
+- [ ] Onboarding walkthrough for first-time users
+- [ ] Additional AI platform adapters
+- [ ] Improved context migration with token awareness
+
+---
+
+## Requirements
+
+- VS Code 1.100.0 or higher
+- Node.js v18+
+- At least one supported CLI (Claude Code, Cursor, Copilot CLI, Windsurf, or Aider)
+- Chrome or Chromium-based browser for the Chrome extension
+
+---
 
 ## Extension Test Runner
+
 Tests live in `src/test/extension.test.ts` — 7 deterministic tests covering control file creation, write stability, append ordering, context regeneration, and extension activation.
 
-To run: click the beaker icon (Testing) in the VS Code sidebar → press ▷ Run All Tests.
+To run: click the beaker icon (Testing) in VS Code sidebar → press ▷ Run All Tests.
 
 All tests must pass before packaging.
 
-## Keeping README Updated
-README is updated with every commit as a project principle.
+---
 
 ## Development
-Built using VS Code Extension API + Claude Code CLI with deterministic SEP-based workflow.
+
+Built using VS Code Extension API + Claude Code CLI with a deterministic SEP-based workflow.
+
+Repository: https://github.com/rehmansherazi/syncbridge
+
+---
+
+## Known Limitations
+
+- Chrome extension site adapters use fallback selector chains — resilient to minor DOM changes but major site redesigns may require an update
+- File watcher hook requires manual setup per project via `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`)
+- Auto-sync hook only available for Claude Code CLI — other CLIs require manual state file updates
+- CLI sync requires the CLI to be running from the project directory that has the hook deployed
+
+---
 
 ## Privacy
 
 Syncbridge does not collect, transmit, or store any user data on external servers.
 
 - Clipboard access is used only to read AI responses and write context locally to your project files
-- Storage permission saves only the active project name in your browser locally
+- Storage permission saves only widget visibility state in your browser locally
 - No analytics, no tracking, no telemetry
 - No data leaves your machine
 - All processing happens locally between your browser, VS Code, and terminal
 
-For questions contact: mrsherazi@hotmail.com
+For questions: mrsherazi@hotmail.com
