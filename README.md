@@ -30,7 +30,7 @@ Search for "Syncbridge" in the Extensions panel and click Install.
 
 **From .vsix file:**
 ```
-code --install-extension syncbridge-0.0.9.vsix
+code --install-extension syncbridge-0.1.0.vsix
 ```
 
 ## MCP server (Claude Code CLI integration)
