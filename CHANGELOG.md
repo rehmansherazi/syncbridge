@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2] - 2026-06-07
+### Improved
+- Added "The Problem" section to README — copy-paste tax messaging
+- Added "Who is this for" table covering 8 audience types
+- Added two Quick Start paths — Chrome only and full sync
+- Broader audience targeting — explicitly free tier and no-CLI users
+
 ## [0.1.1] - 2026-06-07
 ### Improved
 - Complete README rewrite — better structure, Mac shortcuts, activeCli table, roadmap placeholders
