@@ -1,28 +1,73 @@
 # Syncbridge
 
-Sync AI chat interfaces with coding CLIs — bidirectional, automatic, zero copy-paste.
+> *You're 30 messages deep with Claude. The plan is solid. Now you need to build it
+> in your editor. So you copy. You paste. You lose half the context. Your editor
+> doesn't know what Claude knows. And next time you go back to Claude, it doesn't
+> know what your editor did.*
+>
+> *Syncbridge fixes this — automatically, for free, no CLI required.*
 
-[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-v0.1.0-blue)](https://marketplace.visualstudio.com/items?itemName=rehmansherazi.syncbridge)
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-v0.1.1-blue)](https://marketplace.visualstudio.com/items?itemName=rehmansherazi.syncbridge)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-v0.3.0-green)](https://github.com/rehmansherazi/syncbridge)
 [![npm](https://img.shields.io/badge/npm-syncbridge--mcp-red)](https://www.npmjs.com/package/syncbridge-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE.txt)
 
 ---
 
+## The Problem
+
+Every developer using AI chat faces the same daily toil:
+
+- AI gives a long response with 5 code blocks — you copy block 1, switch to your editor, paste, switch back, scroll to find block 2, copy, switch, paste, repeat
+- You make a change in your editor — you want AI feedback — you copy the code, switch to browser, paste, ask the question
+- Your chat gets too long — you start a new one — and re-explain your entire project from scratch
+- You use ChatGPT for one thing and Claude for another — context never carries over
+- You ask Claude for the plan and Cursor to build it — they never know what the other did
+
+**This is the copy-paste tax. It compounds every single day.**
+
+Syncbridge eliminates it.
+
+---
+
+## Who is this for
+
+**You don't need a CLI. You don't need a paid subscription. You just need a browser.**
+
+| Who | Pain | What Syncbridge gives them |
+|-----|------|---------------------------|
+| Developers using free AI chat | Copy-paste between browser and editor all day | Auto-copy + one-keystroke inject |
+| Students and bootcamp learners | Re-explaining project context in every new chat | Context migration in one click |
+| Freelancers | Losing context between client sessions | Persistent context across chats |
+| Multi-model users | Switching between Claude, ChatGPT, Gemini manually | Alt+C on one, Alt+V on another |
+| Claude Code / Cursor / Copilot CLI users | AI chat and CLI never in sync | Full bidirectional auto-sync |
+| Content creators and technical writers | Copy-pasting AI drafts into editors all day | Auto-copy eliminates the switching |
+| Cost-sensitive developers | Claude Code CLI too expensive | Chrome extension is completely free |
+| VS Code power users | Always hunting for better AI workflow tools | Install in 30 seconds, works immediately |
+
+**Free forever. No API key. No subscription. No CLI required.**
+
+---
+
 ## Quick Start
 
-**Step 1 — Install VS Code extension**
-Search "Syncbridge" in VS Code Extensions panel and click Install.
-Or via command palette: `ext install rehmansherazi.syncbridge`
+### Path A — Chrome extension only (no CLI needed)
+1. Clone or download this repo
+2. Go to `chrome://extensions` → enable Developer mode → Load unpacked → select `chrome-extension/` folder
+3. Go to any supported AI site — ask something — response auto-copies to clipboard
+4. Press `Alt+V` on any other AI site to inject it
 
-**Step 2 — Install Chrome extension**
-Load unpacked from `chrome-extension/` folder via `chrome://extensions` (developer mode).
-Chrome Web Store version coming soon.
+That's it. No VS Code extension needed. No CLI. No setup.
 
-**Step 3 — Set your active project**
-Press `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`) in VS Code → select your project folder.
-Press `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`) to deploy the file watcher hook.
-Press `Ctrl+Shift+S` (Mac: `Cmd+Shift+S`) to open the Syncbridge panel.
+**Chrome Web Store version coming soon.**
+
+### Path B — Full sync (Chrome + VS Code + CLI)
+1. Install VS Code extension: search "Syncbridge" in Extensions panel
+2. Load Chrome extension (same as Path A step 2)
+3. Press `Ctrl+Shift+A` (Mac: `Cmd+Shift+A`) → select your project folder
+4. Press `Ctrl+Shift+E` (Mac: `Cmd+Shift+E`) → deploy file watcher hook
+5. Press `Ctrl+Shift+S` (Mac: `Cmd+Shift+S`) → open Syncbridge panel
+6. Run `claude` (or your CLI) from your project folder in terminal
 
 You're ready. Ask your AI something — Syncbridge handles the rest.
 
@@ -30,7 +75,18 @@ You're ready. Ask your AI something — Syncbridge handles the rest.
 
 ## What it does
 
-Closes the gap between AI chat and coding CLIs. No more switching windows to copy-paste. No more lost context when chats get long.
+Syncbridge works in two independent layers — use one or both:
+
+**Chrome extension only** — works for everyone, no CLI needed:
+- Auto-copies AI response to clipboard when it finishes
+- Alt+C to manually copy, Alt+V to inject into any AI input
+- Switch context between Claude, ChatGPT, Gemini, Grok, Mistral, Perplexity, Copilot with one keystroke
+- Green toast confirms copy even when widget is hidden
+
+**VS Code extension + Chrome extension** — full bidirectional sync:
+- AI response auto-copied → one keystroke sends to your CLI instructions file
+- CLI runs tasks → VS Code panel shows every action live
+- Context migration rebuilds your session for a fresh chat
 
 **Supported AI chat interfaces (Chrome extension):**
 - Claude.ai
