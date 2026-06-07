@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1] - 2026-06-07
+### Improved
+- Complete README rewrite — better structure, Mac shortcuts, activeCli table, roadmap placeholders
+- Quick Start section added for faster onboarding
+- Screenshots repositioned after What it does section
+- Known Limitations moved to bottom
+
 ## [0.1.0] - 2026-06-05
 ### Added
 - 5 annotated screenshots added to README
