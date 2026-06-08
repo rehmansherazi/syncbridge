@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3] - 2026-06-07
+### Improved
+- Added Cursor and Copilot/Windsurf user targeting to README
+- Added "missing half" messaging for Cursor users
+- Added origin statement clarifying independent development
+- Expanded "Who is this for" table to 10 audience types
+
 ## [0.1.2] - 2026-06-07
 ### Improved
 - Added "The Problem" section to README — copy-paste tax messaging
