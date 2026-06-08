@@ -110,3 +110,42 @@ Every SEP completion must include before final commit:
 
 No SEP is complete until all four doc files are updated.
 This is part of the SEP Quality Gate — same weight as compile and smoke tests.
+
+## High-Stakes Decision Policy
+
+Any action affecting published extensions, developer accounts, platform submissions,
+permissions, manifests, or any deletion/removal is considered high-stakes.
+
+### Rules for high-stakes decisions:
+
+1. Research first — no implementation prompt until fully verified
+2. Claude must provide before any recommendation:
+   - Confidence level: High / Medium / Low
+   - Source: exact URL or official documentation link
+   - Key quote: exact text that confirms the recommendation
+3. Two-stage approach — always separate:
+   - Stage 1: Research only — findings reported, no action suggested
+   - Stage 2: Recommendation — only after Stage 1 reviewed and approved
+   - Stage 3: Implementation — only after Stage 2 explicitly approved
+4. "Stop. Verify first." — if Rahman says this, Claude stops immediately,
+   completes full verification, and states confidence before proceeding
+5. Devil's advocate check — before any removal or deletion, Claude must state
+   the strongest argument AGAINST the recommendation
+6. Never research AND implement in the same prompt for high-stakes decisions
+7. If contradicting evidence is found during research, stop and report it
+   before suggesting any action — do not proceed past the contradiction
+
+### Trigger phrases that activate this policy:
+- "Stop. Verify first."
+- "This affects my [account/listing/package]"
+- "High stakes"
+- "Are you sure?"
+- "Review Chrome/npm/Marketplace policies first"
+
+### What this policy protects:
+- Chrome Web Store developer account
+- VS Code Marketplace publisher account
+- npm published packages
+- GitHub repository integrity
+- MCP registry submissions
+- Any manifest.json or permissions changes
