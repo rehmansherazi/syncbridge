@@ -23,10 +23,16 @@ Every developer using AI chat faces the same daily toil:
 - Your chat gets too long — you start a new one — and re-explain your entire project from scratch
 - You use ChatGPT for one thing and Claude for another — context never carries over
 - You ask Claude for the plan and Cursor to build it — they never know what the other did
+- You use Cursor — it can send terminal output to its own AI chat, but there's no way to send AI chat responses back to your terminal automatically
+- You use Copilot or Windsurf — there's no bridge at all between their AI and your browser-based AI chats
 
 **This is the copy-paste tax. It compounds every single day.**
 
 Syncbridge eliminates it.
+
+> *Built independently to solve a daily frustration. Turns out even well-funded teams
+> with dedicated AI editors only solved half this problem. Syncbridge solves both directions
+> — and works with every AI site, not just one editor's built-in chat.*
 
 ---
 
@@ -41,6 +47,8 @@ Syncbridge eliminates it.
 | Freelancers | Losing context between client sessions | Persistent context across chats |
 | Multi-model users | Switching between Claude, ChatGPT, Gemini manually | Alt+C on one, Alt+V on another |
 | Claude Code / Cursor / Copilot CLI users | AI chat and CLI never in sync | Full bidirectional auto-sync |
+| Cursor users | Terminal→AI exists in Cursor but AI→terminal is missing | Completes the missing direction + works with any browser AI |
+| Copilot and Windsurf users | No terminal↔AI bridge at all in browser | Full bidirectional sync with any AI chat site |
 | Content creators and technical writers | Copy-pasting AI drafts into editors all day | Auto-copy eliminates the switching |
 | Cost-sensitive developers | Claude Code CLI too expensive | Chrome extension is completely free |
 | VS Code power users | Always hunting for better AI workflow tools | Install in 30 seconds, works immediately |
