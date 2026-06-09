@@ -149,3 +149,76 @@ permissions, manifests, or any deletion/removal is considered high-stakes.
 - GitHub repository integrity
 - MCP registry submissions
 - Any manifest.json or permissions changes
+
+---
+
+## Runtime Testing Policy
+
+Code inspection alone is insufficient. Every Quality Gate must include actual runtime verification.
+
+### Required runtime tests before every commit:
+1. Every button in the panel must be physically clicked and verified working
+2. Every keyboard shortcut must be tested on the target platform
+3. Every command in the Command Palette must be invoked and verified
+4. File operations must be verified by checking actual file contents after operation
+5. Error paths must be triggered and verified to show correct user-facing messages
+
+### Platforms that must be tested before publishing:
+- Linux (Ubuntu) — primary development platform
+- Mac — required before any Marketplace publish
+- Windows — required before any major version publish
+
+### Minimum test matrix per release:
+| Feature | Linux | Mac | Windows |
+|---------|-------|-----|---------|
+| Extension activates | ✓ | ✓ | ✓ |
+| All panel buttons work | ✓ | ✓ | ✓ |
+| All keyboard shortcuts work | ✓ | ✓ | ✓ |
+| File watcher fires | ✓ | ✓ | skip |
+| Hook deploys correctly | ✓ | ✓ | skip |
+
+"Skip" means known limitation documented — not untested.
+
+---
+
+## Webview API Compatibility Policy
+
+VS Code webviews run in sandboxed iframes. Not all browser APIs work.
+
+### Blocked in VS Code webview sandbox — never use:
+- confirm() — blocked, sandbox does not set allow-modals
+- alert() — blocked, same reason
+- prompt() — blocked, same reason
+- window.open() — blocked
+- localStorage / sessionStorage — blocked
+- navigator.clipboard — blocked (use vscode.env.clipboard via postMessage instead)
+
+### Correct pattern for user confirmation in webview:
+- Webview sends a request message to extension: vscode.postMessage({ command: 'xyzRequest' })
+- Extension handles it with vscode.window.showWarningMessage({ modal: true })
+- Extension sends result back to webview if needed via panel.webview.postMessage()
+
+### Before using any browser API in webview HTML:
+- Verify it works in sandboxed iframe context
+- Check VS Code webview documentation explicitly
+- If in doubt — handle it in the extension side, not the webview
+
+---
+
+## Security Change Policy
+
+Any change touching security mechanisms requires the full High-Stakes Decision Policy plus:
+
+1. Research the correct implementation from official documentation first
+2. State confidence level + source + key quote before implementing
+3. Test the security change actually works — do not assume compile = working
+4. Devil's advocate: what could this security change break?
+5. Runtime verify security change does not block legitimate functionality
+
+### Triggers for Security Change Policy:
+- Content Security Policy (CSP) changes
+- Permission changes in manifest files
+- Authentication or authorization logic
+- Data sanitization or escaping functions
+- Clipboard, storage, or file access patterns
+- Any change to webview sandbox settings
