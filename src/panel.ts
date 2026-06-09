@@ -136,6 +136,10 @@ export class SyncBridgePanel {
     }
 
     private _update(): void {
+        this._panel.webview.html = this.getWebviewContent(this._panel.webview);
+    }
+
+    private getWebviewContent(webview: vscode.Webview): string {
         const ai    = this._read(this._cliConfig.instructionsFile);
         const state = this._read(this._cliConfig.stateFile);
         const ctx   = this._read(this._cliConfig.contextFile);
@@ -146,11 +150,11 @@ export class SyncBridgePanel {
             ? ''
             : `<div class="banner banner-warn">⚠ ${escapeHtml(this._cliConfig.displayName)} — auto-sync not available. Edit state file manually.</div>`;
 
-        this._panel.webview.html = `<!DOCTYPE html>
+        return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline' vscode-resource:;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src ${webview.cspSource} 'unsafe-inline';">
 <style>
   body { font-family: var(--vscode-font-family); font-size: 13px; padding: 12px; color: var(--vscode-foreground); background: var(--vscode-editor-background); }
   h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--vscode-descriptionForeground); margin: 16px 0 4px; }

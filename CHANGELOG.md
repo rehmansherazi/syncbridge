@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2026-06-09
+### Fixed
+- CSP now uses webview.cspSource per official VS Code documentation
+- Panel buttons (Copy, Regenerate, Clear) now work correctly on all platforms
+- acquireVsCodeApi() no longer blocked by incorrect CSP
+
 ## [0.2.0] - 2026-06-08
 ### Security
 - Fixed XSS vulnerability — HTML-escape all file contents before panel injection
