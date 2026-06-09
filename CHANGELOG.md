@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4] - 2026-06-09
+### Improved
+- Updated extension description with clearer value proposition
+- Chrome extension popup now shows user-friendly status messages
+- Popup shows supported sites list when on unsupported page
+- Popup shows refresh guidance when content script not ready
+
 ## [0.2.3] - 2026-06-09
 ### Fixed
 - Clear all control files button now works on all platforms including Mac

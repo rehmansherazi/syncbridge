@@ -3,7 +3,7 @@
   "displayName": "Syncbridge",
   "description": "Stop copy-pasting between AI chat and your editor — Syncbridge auto-copies every response. Works with Claude, ChatGPT, Gemini, Grok, Mistral, Perplexity and Copilot. Free.",
   "publisher": "rehmansherazi",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/rehmansherazi/syncbridge"
