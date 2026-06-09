@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0] - 2026-06-08
+### Security
+- Fixed XSS vulnerability — HTML-escape all file contents before panel injection
+- Added Content Security Policy to webview
+- Fixed HTML injection via folder name and custom CLI file names
+### Fixed
+- Extension now activates correctly on Mac and when no workspace folder is open
+- All commands register successfully even without an open folder
+- Fixed watcher memory leak on project switch
+- Fixed null assertion crashes when workspace folder removed
+- python3 → python3 || python fallback for Windows compatibility
+- Custom CLI empty file names now fall back to safe defaults
+- Clipboard operations now handle permission errors gracefully
+- Context migration write errors now show user-facing message
+- Tooltip truncated to last 10 lines to prevent overflow
+- Fixed wrong GitHub URL in extension
+- Debounced file watcher for Windows double-fire
+- initControlFiles now uses activeCli file names correctly
+### Improved
+- Cross-platform compatibility: Mac, Windows, Linux all hardened
+
 ## [0.1.3] - 2026-06-07
 ### Improved
 - Added Cursor and Copilot/Windsurf user targeting to README

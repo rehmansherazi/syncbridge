@@ -10,6 +10,15 @@ export interface CliConfig {
   hasAutoSync: boolean;
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export class SyncBridgePanel {
     public static currentPanel: SyncBridgePanel | undefined;
     private readonly _panel: vscode.WebviewPanel;
@@ -50,8 +59,12 @@ export class SyncBridgePanel {
                 ].join('\n\n');
 
                 const fp = path.join(this._root, this._cliConfig.contextFile);
-                fs.writeFileSync(fp, context, 'utf8');
-                vscode.window.showInformationMessage(`Syncbridge: ${this._cliConfig.contextFile} regenerated.`);
+                try {
+                    fs.writeFileSync(fp, context, 'utf8');
+                    vscode.window.showInformationMessage(`Syncbridge: ${this._cliConfig.contextFile} regenerated.`);
+                } catch (e) {
+                    vscode.window.showErrorMessage('Syncbridge: Could not write context file. Check folder permissions.');
+                }
                 this._update();
             }
             if (msg.command === 'clear') {
@@ -72,9 +85,11 @@ export class SyncBridgePanel {
                 const filename = fileMap[msg.file];
                 if (filename) {
                     const content = this._read(filename);
-                    vscode.env.clipboard.writeText(content).then(() => {
-                        vscode.window.showInformationMessage(`Copied ${filename} to clipboard.`);
-                    });
+                    Promise.resolve(vscode.env.clipboard.writeText(content))
+                        .then(() => {
+                            vscode.window.showInformationMessage(`Copied ${filename} to clipboard.`);
+                        })
+                        .catch(() => vscode.window.showErrorMessage('Syncbridge: Could not copy to clipboard.'));
                 }
             }
         });
@@ -129,12 +144,13 @@ export class SyncBridgePanel {
             : `<div class="banner banner-warn">⚠ Claude Code CLI not detected — clipboard bridge active, auto-sync disabled</div>`;
         const syncBanner = this._cliConfig.hasAutoSync
             ? ''
-            : `<div class="banner banner-warn">⚠ ${this._cliConfig.displayName} — auto-sync not available. Edit state file manually.</div>`;
+            : `<div class="banner banner-warn">⚠ ${escapeHtml(this._cliConfig.displayName)} — auto-sync not available. Edit state file manually.</div>`;
 
         this._panel.webview.html = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
 <style>
   body { font-family: var(--vscode-font-family); font-size: 13px; padding: 12px; color: var(--vscode-foreground); background: var(--vscode-editor-background); }
   h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--vscode-descriptionForeground); margin: 16px 0 4px; }
@@ -157,20 +173,20 @@ export class SyncBridgePanel {
 </head>
 <body>
   <div id="sb-project">
-    <span>📁 ${path.basename(this._root)}</span>
+    <span>📁 ${escapeHtml(path.basename(this._root))}</span>
   </div>
   ${cliBanner}
   ${syncBanner}
-  <h3>AI Instructions (${this._cliConfig.instructionsFile.toUpperCase()})</h3>
-  <pre>${ai}</pre>
+  <h3>AI Instructions (${escapeHtml(this._cliConfig.instructionsFile.toUpperCase())})</h3>
+  <pre>${escapeHtml(ai)}</pre>
   <button onclick="copy('ai')">Copy</button>
 
-  <h3>CLI State (${this._cliConfig.stateFile.toUpperCase()})</h3>
-  <pre>${state}</pre>
+  <h3>CLI State (${escapeHtml(this._cliConfig.stateFile.toUpperCase())})</h3>
+  <pre>${escapeHtml(state)}</pre>
   <button onclick="copy('state')">Copy</button>
 
-  <h3>Context (${this._cliConfig.contextFile.toUpperCase()})</h3>
-  <pre>${ctx}</pre>
+  <h3>Context (${escapeHtml(this._cliConfig.contextFile.toUpperCase())})</h3>
+  <pre>${escapeHtml(ctx)}</pre>
   <button onclick="copy('ctx')">Copy</button>
 
   <h3>Actions</h3>
@@ -188,7 +204,7 @@ export class SyncBridgePanel {
       vscode.postMessage({ command: 'regen' });
     }
     function clearFiles() {
-      if (confirm('Reset ${this._cliConfig.instructionsFile} and ${this._cliConfig.stateFile} to empty? This cannot be undone.')) {
+      if (confirm('Reset ${this._cliConfig.instructionsFile.replace(/'/g, "\\'")} and ${this._cliConfig.stateFile.replace(/'/g, "\\'")} to empty? This cannot be undone.')) {
         vscode.postMessage({ command: 'clear' });
       }
     }
