@@ -1,7 +1,7 @@
 {
   "name": "syncbridge",
   "displayName": "Syncbridge",
-  "description": "AI chat to CLI sync bridge",
+  "description": "Stop copy-pasting between AI chat and your editor — Syncbridge auto-copies every response. Works with Claude, ChatGPT, Gemini, Grok, Mistral, Perplexity and Copilot. Free.",
   "publisher": "rehmansherazi",
   "version": "0.2.3",
   "repository": {
