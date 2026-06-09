@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.3] - 2026-06-09
+### Fixed
+- Clear all control files button now works on all platforms including Mac
+- Replaced confirm() dialog (blocked in sandboxed VS Code webviews) with native
+  VS Code showWarningMessage modal — works correctly on Mac, Windows, Linux
+
 ## [0.2.2] - 2026-06-09
 ### Fixed
 - CSP now uses webview.cspSource per official VS Code documentation

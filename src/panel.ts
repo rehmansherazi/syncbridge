@@ -67,6 +67,28 @@ export class SyncBridgePanel {
                 }
                 this._update();
             }
+            if (msg.command === 'clearRequest') {
+                vscode.window.showWarningMessage(
+                    `Reset ${this._cliConfig.instructionsFile} and ${this._cliConfig.stateFile} to empty? This cannot be undone.`,
+                    { modal: true },
+                    'Reset'
+                ).then(choice => {
+                    if (choice === 'Reset') {
+                        const files = [this._cliConfig.instructionsFile, this._cliConfig.stateFile];
+                        try {
+                            for (const f of files) {
+                                const fp = path.join(this._root, f);
+                                fs.writeFileSync(fp, `# ${f}\n<!-- reset -->\n`, 'utf8');
+                            }
+                            vscode.window.showInformationMessage('Syncbridge: control files cleared.');
+                            this._update();
+                        } catch (e) {
+                            vscode.window.showErrorMessage('Syncbridge: Could not clear files. Check folder permissions.');
+                        }
+                    }
+                });
+                return;
+            }
             if (msg.command === 'clear') {
                 const files = [this._cliConfig.instructionsFile, this._cliConfig.stateFile];
                 for (const f of files) {
@@ -208,9 +230,7 @@ export class SyncBridgePanel {
       vscode.postMessage({ command: 'regen' });
     }
     function clearFiles() {
-      if (confirm('Reset ${this._cliConfig.instructionsFile.replace(/'/g, "\\'")} and ${this._cliConfig.stateFile.replace(/'/g, "\\'")} to empty? This cannot be undone.')) {
-        vscode.postMessage({ command: 'clear' });
-      }
+      vscode.postMessage({ command: 'clearRequest' });
     }
   </script>
 </body>
